@@ -2,7 +2,7 @@
 CC=g++.exe
 RM=rm
 MKDIR=mkdir
-CFLAGS=-c -Wall
+CFLAGS=-c -Wall -IInclude
 CCFLAGS=
 LIBNAME=RGSSPlus.dll
 OUTDIR=build

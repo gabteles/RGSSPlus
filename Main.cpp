@@ -6,6 +6,7 @@
  */
 
 #include <windows.h>
+#include <Plus.hpp>
 
 /*
  * Main function
@@ -15,6 +16,7 @@
  * @return int    Exit code
  */
 int main(int argc, char** argv){
+    Plus::Bitmap();
     return 1;
 }
 
