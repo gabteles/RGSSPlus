@@ -18,6 +18,20 @@ namespace Plus {
         bool disposed();
         void flash(Plus::Color color, unsigned int duration);
         void update();
+        Plus::Color getColor();
+        Plus::Tone  getTone();
+        Plus::Rect  getRect();
+        bool getVisible();
+        int getZ();
+        int getOx();
+        int getOy();
+        void setColor(Plus::Color color);
+        void setTone(Plus::Tone tone);
+        void setRect(Plus::Rect rect);
+        void getVisible(bool visible);
+        void setZ(int z);
+        void setOx(int ox);
+        void setOy(int oy);
         ~Viewport();
     private:
 
