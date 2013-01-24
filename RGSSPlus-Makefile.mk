@@ -2,7 +2,7 @@
 CC=g++.exe
 RM=rm
 MKDIR=mkdir
-CFLAGS=-c -Wall -IInclude
+CFLAGS=-c -Wall -IInclude -DBUILDING_DLL
 CCFLAGS=
 LIBNAME=RGSSPlus.dll
 OUTDIR=build
@@ -15,7 +15,7 @@ LINKOBJ=$(patsubst %.o,${OBJDIR}/%.o,$(OBJECTS))
 	
 #===============================================================================
 	
-all: directories compile clean
+all: directories compile
 
 clean:
 	$(RM) -rf $(OBJDIR)/*o

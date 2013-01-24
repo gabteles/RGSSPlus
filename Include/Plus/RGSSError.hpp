@@ -12,9 +12,11 @@ namespace Plus {
     class RGSSError {
     public:
         RGSSError();
+        string getMessage();
+        void setMessage(string message);
         ~RGSSError();
     private:
-
+        string message;
     };
 };
 

@@ -15,8 +15,8 @@
  * @param  char** argv Pointer to argument strings
  * @return int    Exit code
  */
-int main(int argc, char** argv){
-    Plus::Bitmap();
+EXPORT(int) main(int argc, char** argv){
+    
     return 1;
 }
 

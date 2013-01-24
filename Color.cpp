@@ -8,7 +8,7 @@
 #include <Plus.hpp>
 
 namespace Plus {
-    Color::Color() {
+    Color::Color(double red, double green, double blue) {
     }
 
     Color::~Color() {

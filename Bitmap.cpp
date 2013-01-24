@@ -8,10 +8,11 @@
 #include <Plus.hpp>
 
 namespace Plus {
-   Bitmap::Bitmap() {
+   Bitmap::Bitmap(string filename) {
+       
    }
 
    
    Bitmap::~Bitmap() {
    }
-}
+};

@@ -12,6 +12,12 @@ namespace Plus {
     class Viewport {
     public:
         Viewport();
+        Viewport(Plus::Rect);
+        Viewport(int x, int y, int width, int height);
+        void dispose();
+        bool disposed();
+        void flash(Plus::Color color, unsigned int duration);
+        void update();
         ~Viewport();
     private:
 

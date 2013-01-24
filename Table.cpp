@@ -8,7 +8,7 @@
 #include <Plus.hpp>
 
 namespace Plus {
-        Table::Table() {
+        Table::Table(unsigned long xsize) {
         }
 
         Table::~Table() {
