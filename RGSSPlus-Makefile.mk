@@ -2,8 +2,8 @@
 CC=g++.exe
 RM=rm
 MKDIR=mkdir
-CFLAGS=-c -Wall -IInclude -DBUILDING_DLL
-CCFLAGS=
+CFLAGS=-c -Wall -Wextra -IInclude -DBUILDING_DLL -Wno-unused -Wno-return-type
+CCFLAGS=-shared
 LIBNAME=RGSSPlus.dll
 OUTDIR=build
 OBJDIR=obj

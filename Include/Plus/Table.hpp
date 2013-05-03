@@ -10,15 +10,14 @@
 
 namespace Plus {
         class Table {
-            
-            struct packedTable {
-                unsigned long dim;
-                unsigned long xsize;
-                unsigned long ysize;
-                unsigned long zsize;
-                unsigned long memSize;
-                unsigned short* data;
-            };
+                struct packedTable {
+                        unsigned long dim;
+                        unsigned long xsize;
+                        unsigned long ysize;
+                        unsigned long zsize;
+                        unsigned long memSize;
+                        unsigned short* data;
+                };
             
         public:
                 Table(unsigned long xsize);
@@ -35,10 +34,11 @@ namespace Plus {
                 void set(unsigned long x, unsigned long y, unsigned long z, unsigned short value);
                 packedTable dump();
                 void load(packedTable packed);
-                
                 ~Table();
+                
         private:
-
+            unsigned char dimensions;
+            unsigned long xsize, ysize, zsize;
         };
 };
 

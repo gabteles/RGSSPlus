@@ -8,9 +8,12 @@
 #include <Plus.hpp>
 
 namespace Plus {
-    Plane::Plane() {
-    }
-
-    Plane::~Plane() {
+    /*
+     * Draw the plane on screen
+     * 
+     * @return void
+     */
+    void Plane::draw(){
+        
     }
 };

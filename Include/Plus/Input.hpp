@@ -9,9 +9,14 @@
 #define	INPUT_HPP
 
 namespace Plus {
-    namespace Input {
-        
-    };
+        namespace Input {
+                void update();
+                bool trigger(unsigned char key);
+                bool press(unsigned char key);
+                bool repeat(unsigned char key);
+                unsigned char dir4();
+                unsigned char dir8();
+        };
 };
 
 #endif	/* INPUT_HPP */

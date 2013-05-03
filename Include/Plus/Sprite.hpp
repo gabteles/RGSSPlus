@@ -8,69 +8,78 @@
 #ifndef SPRITE_HPP
 #define	SPRITE_HPP
 
-#include "Color.hpp"
-
+#include <Plus.hpp>
 
 namespace Plus {
-        class Sprite {
+        class Sprite : public Drawable {
         public:
-            Sprite();
-            Sprite(Plus::Viewport viewport);
-            Plus::Bitmap getBitmap();
-            void setBitmap(Plus::Bitmap bitmap);
-            Plus::Viewport getViewport();
-            void setViewport(Plus::Viewport);
-            Plus::Rect getSrcRect();
-            void setSrcRect(Plus::Rect);
-            long getOx();
-            void setOx(long ox);
-            long getOy();
-            void setOy(long oy);
-            long getX();
-            void setX(long x);
-            long getY();
-            void setY(long y);
-            int getZ();
-            void setZ(long z);
-            unsigned short getAngle();
-            void setAngle(unsigned short angle);
-            bool getVisible();
-            void setVibible(bool visible);
-            double getZoomX();
-            void setZoomX(double zoomX);
-            double getZoomY();
-            void setZoomY(double zoomY);
-            unsigned char getOpacity();
-            void setOpacity(unsigned char);
-            bool getMirror();
-            void setMirror(bool mirror);
-            int getWaveAmp();
-            void setWaveAmp(int waveAmp);
-            int getWaveLength();
-            void setWaveLength(int waveLength);
-            int getWaveSpeed();
-            void setWaveSpeed(int waveSpeed);
-            int getWavePhase();
-            void setWavePhase(int wavePhase);
-            unsigned int getBushDepth();
-            void setBushDepth(unsigned int bushDepth);
-            unsigned char getBushOpacity();
-            void setBushOpacity(unsigned char bushOpacity);
-            unsigned char getBlendType();
-            void setBlendType(unsigned char blendType);
-            Plus::Color getColor();
-            void setColor(Plus::Color color);
-            Plus::Tone getTone();
-            void setTone(Plus::Tone tone);
-            void dispose();
-            bool disposed();
-            void flash(Plus::Color color, unsigned int duration);
-            void update();
-            unsigned int getWidth();
-            unsigned int getHeight();
-            ~Sprite();
+                Sprite() : Drawable::Drawable(){
+                    this->x             = 0;
+                    this->y             = 0;
+                    this->angle         = 0;
+                    //this->srcRect       = new Plus::Rect();
+                    this->mirror        = false;
+                    this->waveAmp       = 0;
+                    this->waveLength    = 0;
+                    this->waveSpeed     = 360;
+                    this->wavePhase     = 0;
+                    //this->flashColor    = new Plus::Color();
+                    this->flashDuration = 0;
+                    this->bushDepth     = 0;
+                    this->bushOpacity   = 127;
+                };
+                
+                Sprite(Plus::Viewport* viewport) : Drawable::Drawable(viewport){
+                    this->x             = 0;
+                    this->y             = 0;
+                    this->angle         = 0;
+                    //this->srcRect       = new Plus::Rect();
+                    this->mirror        = false;
+                    this->waveAmp       = 0;
+                    this->waveLength    = 0;
+                    this->waveSpeed     = 360;
+                    this->wavePhase     = 0;
+                    //this->flashColor    = new Plus::Color();
+                    this->flashDuration = 0;
+                    this->bushDepth     = 0;
+                    this->bushOpacity   = 127;
+                };
+                
+                long getX();
+                void setX(long x);
+                long getY();
+                void setY(long y);
+                Plus::Rect* getSrcRect();
+                void setSrcRect(Plus::Rect* rect);
+                unsigned short getAngle();
+                void setAngle(unsigned short angle);
+                bool getMirror();
+                void setMirror(bool mirror);
+                int getWaveAmp();
+                void setWaveAmp(int waveAmp);
+                int getWaveLength();
+                void setWaveLength(int waveLength);
+                int getWaveSpeed();
+                void setWaveSpeed(int waveSpeed);
+                int getWavePhase();
+                void setWavePhase(int wavePhase);
+                unsigned int getBushDepth();
+                void setBushDepth(unsigned int bushDepth);
+                unsigned char getBushOpacity();
+                void setBushOpacity(unsigned char bushOpacity);
+                void flash(Plus::Color* color, unsigned int duration);
+                void update();
+                void draw();
+                
         private:
-
+                long x, y;
+                unsigned short angle;
+                Plus::Rect* srcRect;
+                bool mirror;
+                int waveAmp, waveLength, waveSpeed, wavePhase;
+                Plus::Color* flashColor;
+                unsigned int bushDepth, flashDuration;
+                unsigned char bushOpacity;
         };
 };
 

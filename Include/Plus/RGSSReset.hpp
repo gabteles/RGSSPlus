@@ -13,7 +13,7 @@ namespace Plus {
     public:
         RGSSReset();
         string getMessage();
-        void setMessage(string);
+        void setMessage(string message);
         ~RGSSReset();
     private:
         string message;
