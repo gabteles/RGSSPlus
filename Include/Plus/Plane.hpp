@@ -11,9 +11,9 @@
 #include <Plus.hpp>
 
 namespace Plus {
-        class Plane : public Plus::Drawable {
-            void draw();
-        };
+    class Plane : public Plus::Drawable {
+        void draw();
+    };
 };
 
 #endif	/* PLANE_HPP */

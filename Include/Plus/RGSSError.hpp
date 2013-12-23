@@ -9,15 +9,16 @@
 #define	RGSSERROR_HPP
 
 namespace Plus {
-        class RGSSError {
-        public:
-                RGSSError();
-                string getMessage();
-                void setMessage(string message);
-                ~RGSSError();
-        private:
-                string message;
-        };
+    class RGSSError {
+    public:
+        RGSSError();
+        std::string getMessage();
+        void setMessage(std::string message);
+        ~RGSSError();
+        
+    private:
+        std::string message;
+    };
 };
 
 #endif	/* RGSSERROR_HPP */

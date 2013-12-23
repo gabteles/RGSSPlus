@@ -12,11 +12,11 @@ namespace Plus {
     class RGSSReset {
     public:
         RGSSReset();
-        string getMessage();
-        void setMessage(string message);
+        std::string getMessage();
+        void setMessage(std::string message);
         ~RGSSReset();
     private:
-        string message;
+        std::string message;
     };
 };
 

@@ -11,9 +11,9 @@
 namespace Plus {
         namespace Input {
                 void update();
-                bool trigger(unsigned char key);
-                bool press(unsigned char key);
-                bool repeat(unsigned char key);
+                bool checkTrigger(unsigned char key);
+                bool checkPress(unsigned char key);
+                bool checkRepeat(unsigned char key);
                 unsigned char dir4();
                 unsigned char dir8();
         };

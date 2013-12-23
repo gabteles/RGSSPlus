@@ -2,14 +2,20 @@
 CC=g++.exe
 RM=rm
 MKDIR=mkdir
-CFLAGS=-c -Wall -Wextra -IInclude -DBUILDING_DLL -Wno-unused -Wno-return-type
-CCFLAGS=-shared
+CFLAGS=-c -Wall -Wextra -IInclude -DBUILDING_DLL -Wno-unused
+CCFLAGS=-shared -Wl,--subsystem,windows
 LIBNAME=RGSSPlus.dll
+LIBDIR=Library
 OUTDIR=build
 OBJDIR=obj
 
 # Auto
 SOURCES=$(wildcard *.cpp)
+LIB1=$(wildcard $(LIBDIR)/*.a)
+LIB2=$(notdir $(LIB1))
+LIB3=$(subst lib,,$(LIB2))
+LIBS=$(patsubst %.a,%,$(LIB3))
+LIBSINC=$(addprefix -l,$(LIBS))
 OBJECTS=$(SOURCES:.cpp=.o)
 LINKOBJ=$(patsubst %.o,${OBJDIR}/%.o,$(OBJECTS))
 	
@@ -23,7 +29,7 @@ clean:
 #===============================================================================
 
 compile: $(OBJECTS)
-	$(CC) $(LINKOBJ) $(CCFLAGS) -o $(OUTDIR)/$(LIBNAME)
+	$(CC) $(LINKOBJ) $(LIBSINC) -L$(LIBDIR) $(CCFLAGS) -o $(OUTDIR)/$(LIBNAME)
 
 directories: ${OUTDIR} ${OBJDIR}
 

@@ -16,8 +16,13 @@
  * @return int    Exit code
  */
 EXPORT(int) main(int argc, char** argv){
-        
-        return 1;
+    Plus::Config::initialize();
+    Plus::Graphics::initialize(544, 416);
+    
+    while (1){
+        Plus::Graphics::update();
+    }
+    return 1;
 }
 
 /*
@@ -31,29 +36,31 @@ EXPORT(int) main(int argc, char** argv){
  */
 
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved){
-        // Perform actions based on the reason for calling.
-        switch(fdwReason) { 
-        case DLL_PROCESS_ATTACH:
-                // Initialize once for each new process.
-                // Return FALSE to fail DLL load.
-                break;
-
-        case DLL_THREAD_ATTACH:
-                // Do thread-specific initialization.
-                break;
-
-        case DLL_THREAD_DETACH:
-                // Do thread-specific cleanup.
-                break;
-
-        case DLL_PROCESS_DETACH:
-                // Perform any necessary cleanup.
-                break;
-
-        default:
-                // Other reason
-                return FALSE;
-        }
+    return TRUE;
     
-        return TRUE;  // Successful DLL_PROCESS_ATTACH.
+    // Perform actions based on the reason for calling.
+    switch(fdwReason) { 
+    case DLL_PROCESS_ATTACH:
+        // Initialize once for each new process.
+        // Return FALSE to fail DLL load.
+        break;
+
+    case DLL_THREAD_ATTACH:
+        // Do thread-specific initialization.
+        break;
+
+    case DLL_THREAD_DETACH:
+        // Do thread-specific cleanup.
+        break;
+
+    case DLL_PROCESS_DETACH:
+        // Perform any necessary cleanup.
+        break;
+
+    default:
+        // Other reason
+        return FALSE;
+    }
+
+    return TRUE;  // Successful DLL_PROCESS_ATTACH.
 }
