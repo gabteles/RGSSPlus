@@ -12,7 +12,7 @@
 
 namespace Plus {
     class Plane : public Plus::Drawable {
-        void draw();
+        virtual void draw();
     };
 };
 

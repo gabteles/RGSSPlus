@@ -15,13 +15,21 @@
  * @param  char** argv Pointer to argument strings
  * @return int    Exit code
  */
-EXPORT(int) main(int argc, char** argv){
-    Plus::Config::initialize();
-    Plus::Graphics::initialize(544, 416);
+EXPORT(int) testMain(){
+    Plus::Config.initialize();
+    Plus::Graphics.initialize(544, 416);
     
-    while (1){
-        Plus::Graphics::update();
+    Plus::Sprite *sprite = new Plus::Sprite();
+    sprite->setBitmap(new Plus::Bitmap("img.png"));
+    sprite->setX((Plus::Graphics.getWidth() - sprite->bitmap->getWidth()) / 2);
+    double k = 0.1;
+    
+    while (k += 0.000001){
+        Plus::Graphics.update();
+        sprite->setX(50 * cos(k) + ((Plus::Graphics.getWidth() - sprite->bitmap->getWidth()) / 2));
+        sprite->setY(50 * sin(k));
     }
+    
     return 1;
 }
 
@@ -36,8 +44,6 @@ EXPORT(int) main(int argc, char** argv){
  */
 
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved){
-    return TRUE;
-    
     // Perform actions based on the reason for calling.
     switch(fdwReason) { 
     case DLL_PROCESS_ATTACH:

@@ -253,7 +253,24 @@ namespace Plus {
      * @return void
      */
     void Sprite::draw(){
+        if (this->bitmap and not this->_disposed){
+            glTranslatef(this->x - this->ox, this->y - this->oy + Plus::Graphics.getHeight() - this->bitmap->getHeight(),0);
+            glBindTexture(GL_TEXTURE_2D, this->bitmap->getTextureId());
+            glBegin(GL_QUADS); 
+                glTexCoord2d(0, 1); 
+                glVertex2f(0, 0);
+                
+                glTexCoord2d(1, 1); 
+                glVertex2f(this->bitmap->getWidth(), 0);        
+                
+                glTexCoord2d(1, 0); 
+                glVertex2f(this->bitmap->getWidth(), this->bitmap->getHeight());
+                
+                glTexCoord2d(0, 0); 
+                glVertex2f(0, this->bitmap->getHeight());
+            glEnd();                        
 
+        }
     }
 };
 

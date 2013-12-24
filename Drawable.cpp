@@ -14,7 +14,16 @@ namespace Plus {
      * @return Plus::Plane New default plane
      */
     Drawable::Drawable(){
-        Drawable(new Plus::Viewport());
+        this->bitmap    = NULL;
+        this->ox        = 0;
+        this->oy        = 0;
+        this->visible   = true;
+        this->_disposed = false;
+        this->viewport  = new Plus::Viewport();
+        this->color     = new Plus::Color();
+        this->tone      = new Plus::Tone();
+        
+        Plus::Graphics.addObject(this);
     }
 
     /*
@@ -32,6 +41,8 @@ namespace Plus {
         this->viewport  = viewport;
         this->color     = new Plus::Color();
         this->tone      = new Plus::Tone();
+        
+        Plus::Graphics.addObject(this);
     }
 
     /*
@@ -39,7 +50,7 @@ namespace Plus {
      * 
      * @return void
      */
-    void draw(){
+    void Drawable::draw(){
         // DO NOTHING
     }
 
@@ -310,6 +321,6 @@ namespace Plus {
      * Destructor
      */
     Drawable::~Drawable(){
-
+        Plus::Graphics.removeObject(this);
     }
 }

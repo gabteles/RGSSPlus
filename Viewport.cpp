@@ -14,7 +14,7 @@ namespace Plus {
      * @return Plus::Viewport Viewport that covers all the screen
      */
     Viewport::Viewport(){
-        this->rect      = new Plus::Rect(0, 0, Plus::Graphics::getWidth(), Plus::Graphics::getHeight());
+        this->rect      = new Plus::Rect(0, 0, Plus::Graphics.getWidth(), Plus::Graphics.getHeight());
         this->color     = new Plus::Color();
         this->tone      = new Plus::Tone();
         this->z         = 0;

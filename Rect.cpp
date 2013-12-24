@@ -14,7 +14,10 @@ namespace Plus {
      * @return Plus::Rect Zero-width/height rect on position P(0,0)
      */
     Rect::Rect() {
-        Rect(0, 0, 0, 0);
+        this->x = 0;
+        this->y = 0;
+        this->w = 0;
+        this->h = 0;
     }
 
     /*

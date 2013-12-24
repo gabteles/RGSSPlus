@@ -15,7 +15,7 @@ namespace Plus {
     public:
         Drawable();
         Drawable(Plus::Viewport* viewport);
-        void draw();
+        virtual void draw();
         Plus::Bitmap* getBitmap();
         void setBitmap(Plus::Bitmap* bitmap);
         Plus::Viewport* getViewport();
@@ -46,7 +46,7 @@ namespace Plus {
         unsigned long getHeight();
         virtual ~Drawable();
         
-    private:
+        
         Plus::Bitmap* bitmap;
         Plus::Viewport* viewport;
         long ox, oy;

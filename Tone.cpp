@@ -14,7 +14,10 @@ namespace Plus {
      * @return Plus::Tone New blank tone
      */
     Tone::Tone(){
-        Tone(0, 0, 0, 0);
+        this->r  = 0;
+        this->g  = 0;
+        this->b  = 0;
+        this->gr = 0;
     }
 
     /*
@@ -26,7 +29,10 @@ namespace Plus {
      * @return Plus::Tone Tone with RGB data + Neutral (0) Alpha Channel
      */
     Tone::Tone(double red, double green, double blue){
-        Tone(red, green, blue, 0);
+        this->r  = red;
+        this->g  = green;
+        this->b  = blue;
+        this->gr = 0;
     }
 
     /* 

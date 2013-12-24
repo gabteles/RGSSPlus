@@ -16,7 +16,25 @@ namespace Plus {
      */
     Bitmap::Bitmap(std::string filename) {
         this->_disposed = false;
-
+        
+        glGenTextures(1, &this->textureId);
+        
+        glBindTexture(GL_TEXTURE_2D, this->textureId);
+        int w, h;
+        unsigned char* image = SOIL_load_image(filename.c_str(), &w, &h, 0, SOIL_LOAD_RGBA);
+        //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+        
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+        
+        SOIL_free_image_data(image);
+        
+        this->width = w;
+        this->height = h;
+        
         // TODO: Create bitmap
     }
 
@@ -33,6 +51,15 @@ namespace Plus {
         this->height    = height;
 
         // TODO: Create bitmap
+    }
+    
+    /*
+     * Return bitmap's GL texture id
+     * 
+     * @return uint Texture ID
+     */
+    unsigned int Bitmap::getTextureId(){
+        return this->textureId;
     }
 
     /*

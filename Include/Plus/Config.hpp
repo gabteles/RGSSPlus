@@ -6,20 +6,20 @@
  */
 
 #ifndef CONFIG_HPP
+#define	CONFIG_HPP
 
 #include <Plus.hpp>
 
 namespace Plus {
-    namespace Config {
-        static CSimpleIni* iniParser;
-
-        void initialize();
-        std::string getTitle();
-    }
+    class _MConfig {
+        public:
+            void initialize();
+            std::string getTitle();
+            
+        private:
+            CSimpleIni* iniParser;
+    };
 }
-#define	CONFIG_HPP
-
-
 
 #endif	/* CONFIG_HPP */
 

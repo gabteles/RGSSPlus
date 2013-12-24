@@ -37,10 +37,12 @@
 #include <iostream>
 #include <string>
 #include <sstream>
-#include <pthread.h>
+#include <stack>
+#include <math.h>
 
 /* Library Includes */
 #include <GL/freeglut.h>         // GLUT
+#include <SOIL/SOIL.h>           // SOIL
 #include <GL/gl.h>               // GL
 #include <SimpleIni/SimpleIni.h> // SimpleIni
 #include <Timer/Timer.h>         // Timer
@@ -49,6 +51,7 @@
 namespace Plus {
     using std::string;
     using std::stringstream;
+    using std::stack;
 
     class Bitmap;
     class Color;
@@ -63,10 +66,15 @@ namespace Plus {
     class Tone;
     class Viewport;
 
-    namespace Audio{};
-    namespace Input{};
-    namespace Graphics{};
-    namespace Config{};
+    class _MAudio;
+    class _MInput;
+    class _MGraphics;
+    class _MConfig;
+    
+    extern _MAudio    Audio;
+    extern _MInput    Input;
+    extern _MGraphics Graphics;
+    extern _MConfig   Config;
 };
 
 /* Plus Includes */

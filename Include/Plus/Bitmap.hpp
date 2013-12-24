@@ -17,6 +17,7 @@ namespace Plus {
         /* Functions */
         Bitmap(std::string filename);
         Bitmap(unsigned int width, unsigned int height);
+        unsigned int getTextureId();
         unsigned int getWidth();
         unsigned int getHeight();
         void dispose();
@@ -48,6 +49,7 @@ namespace Plus {
         unsigned int width;
         unsigned int height;
         bool _disposed;
+        unsigned int textureId;
     };
 };
 

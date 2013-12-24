@@ -14,7 +14,13 @@ namespace Plus {
      * @return Plus::Font New Font
      */
     Font::Font(){
-        Font(Font::Default().getName(), Font::Default().getSize());
+        this->name     = Font::Default().getName(); 
+        this->size     = Font::Default().getSize();
+        this->color    = Font::Default().getColor();
+        this->bold     = Font::Default().getBold();
+        this->italic   = Font::Default().getItalic();
+        this->outline  = Font::Default().getOutline();
+        this->outColor = Font::Default().getOutColor();
     }
 
     /*
@@ -24,7 +30,13 @@ namespace Plus {
      * @return Plus::Font New font
      */
     Font::Font(std::string name){
-        Font(name, Font::Default().getSize());
+        this->name     = name; // TODO: Check if font exist
+        this->size     = Font::Default().getSize();
+        this->color    = Font::Default().getColor();
+        this->bold     = Font::Default().getBold();
+        this->italic   = Font::Default().getItalic();
+        this->outline  = Font::Default().getOutline();
+        this->outColor = Font::Default().getOutColor();
     }
 
     /*

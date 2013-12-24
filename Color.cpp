@@ -14,7 +14,10 @@ namespace Plus {
      * @return Plus::Color New blank color
      */
     Color::Color(){
-        Color(0, 0, 0, 0);
+        this->r = 0;
+        this->g = 0;
+        this->b = 0;
+        this->a = 0;
     }
 
     /*
@@ -26,7 +29,10 @@ namespace Plus {
      * @return Plus::Color Color with RGB data + 255 Alpha Channel
      */
     Color::Color(double red, double green, double blue){
-        Color(red, green, blue, 255);
+        this->r = red;
+        this->g = green;
+        this->b = blue;
+        this->a = 255;
     }
 
     /* 

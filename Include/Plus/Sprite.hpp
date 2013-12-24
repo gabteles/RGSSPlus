@@ -57,7 +57,7 @@ namespace Plus {
         void setBushOpacity(unsigned char bushOpacity);
         void flash(Plus::Color* color, unsigned int duration);
         void update();
-        void draw();
+        virtual void draw();
 
     private:
         long x, y;
