@@ -29,12 +29,11 @@ namespace Plus {
         char* argv = (char*)malloc(1);
 
         // Initialize GLUT and setup it.
-        const char* charTitle = title.c_str();
         glutInit(&argc, &argv);
         glutInitWindowPosition(-1, -1);
         glutInitWindowSize(width, height);
         glutInitDisplayMode(GLUT_RGBA|GLUT_DOUBLE|GLUT_DEPTH);
-        glutCreateWindow(charTitle);
+        glutCreateWindow(title.c_str());
 
         // Resolve style issues (remove sizeable border & maximize button)
         //HWND freeWindow = FindWindow("FreeGLUT", charTitle);
@@ -54,18 +53,18 @@ namespace Plus {
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClearDepth(1.0f);
         glEnable(GL_TEXTURE_2D);
-        glDisable(GL_BLEND);
+        glEnable(GL_BLEND);
         glEnable(GL_DEPTH_TEST);
-        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glDepthFunc(GL_LEQUAL);
 
         // Initialize timer (frame rate controller)
+        this->realFrameRate = 0;
+        this->realFrameRateBuffer = 0;
         this->timer = new Timer();
         this->secTimer = new Timer();
         this->timer->start();
         this->secTimer->start();
-        this->realFrameRate = 0;
-        this->realFrameRateBuffer = 0;
     }
 
     /*
