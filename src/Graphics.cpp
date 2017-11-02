@@ -61,7 +61,11 @@ namespace Plus {
 
         // Initialize timer (frame rate controller)
         this->timer = new Timer();
+        this->secTimer = new Timer();
         this->timer->start();
+        this->secTimer->start();
+        this->realFrameRate = 0;
+        this->realFrameRateBuffer = 0;
     }
 
     /*
@@ -143,12 +147,21 @@ namespace Plus {
     };
 
     /*
-     * Get graphics actual [target] frame rate
+     * Get graphics current target frame rate
      *
      * @return unsigned int Frame rate in frames per second.
      */
     unsigned int _MGraphics::getFrameRate(){
         return this->frameRate;
+    };
+
+    /*
+     * Get graphics actual frame rate
+     *
+     * @return unsigned int Frame rate in frames per second.
+     */
+    unsigned int _MGraphics::getRealFrameRate(){
+        return this->realFrameRate;
     };
 
     /*
@@ -189,6 +202,7 @@ namespace Plus {
 
         // Correct frame rating? (Probably not)
         if (this->timer->getElapsedTimeInMicroSec() > this->microsecByFrame){
+            this->realFrameRateBuffer++;
             glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
             Drawable* aObj;
@@ -203,6 +217,12 @@ namespace Plus {
 
             glutSwapBuffers();
             this->timer->reset();
+        }
+
+        if (this->secTimer->getElapsedTimeInMicroSec() > 1000000) {
+            this->realFrameRate = this->realFrameRateBuffer;
+            this->realFrameRateBuffer = 0;
+            this->secTimer->reset();
         }
     };
 

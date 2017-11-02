@@ -12,6 +12,7 @@ namespace Plus {
             unsigned int getHeight();
             unsigned char getBrightness();
             unsigned int  getFrameRate();
+            unsigned int  getRealFrameRate();
             void setFrameRate(unsigned int frameRate);
             void setBrightness(unsigned char brightness);
             void addObject(Drawable* object);
@@ -30,6 +31,9 @@ namespace Plus {
             unsigned char brightness;
             unsigned int  frameRate;
             Timer* timer;
+            Timer* secTimer;
+            unsigned int realFrameRate;
+            unsigned int realFrameRateBuffer;
             double microsecByFrame;
             stack<Drawable*>* objects;
     };
