@@ -13,13 +13,21 @@ int main(){
 
     Plus::Sprite *sprite = new Plus::Sprite();
     sprite->setBitmap(new Plus::Bitmap("img.png"));
-    sprite->setX((Plus::Graphics.getWidth() - sprite->bitmap->getWidth()) / 2);
     double k = 0.1;
+
+    float baseX = Plus::Graphics.getWidth() / 2;
+    float baseY = Plus::Graphics.getHeight() / 2;
+
+    sprite->setX(baseX);
+    sprite->setY(baseY);
+    sprite->setOx(sprite->getWidth() / 2);
+    sprite->setOy(sprite->getHeight() / 2);
 
     while (k += 0.000001){
         Plus::Graphics.update();
-        sprite->setX(50 * cos(k) + ((Plus::Graphics.getWidth() - sprite->bitmap->getWidth()) / 2));
-        sprite->setY(50 * sin(k));
+        sprite->setAngle(k*10);
+        sprite->setX(baseX + 50 * cos(k) + ((Plus::Graphics.getWidth() - sprite->bitmap->getWidth()) / 2));
+        sprite->setY(baseY + 50 * sin(k));
     }
 
     return 0;

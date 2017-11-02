@@ -247,20 +247,44 @@ namespace Plus {
      */
     void Sprite::draw(){
         if (this->bitmap and not this->_disposed){
-            glTranslatef(this->x - this->ox, this->y - this->oy + Plus::Graphics.getHeight() - this->bitmap->getHeight(),0);
+            glTranslatef(
+                this->x - this->ox,
+                Plus::Graphics.getHeight() - (this->y - this->oy + this->bitmap->getHeight()),
+                0
+            );
+
+            float r    = this->angle * M_PI / 180;
+            float cosR = cos(r);
+            float sinR = sin(r);
+            float iCosR = (1 - cosR);
+            float wDiff = (this->bitmap->getWidth() - this->ox);
+            float hDiff = (this->bitmap->getHeight() - this->oy);
+
             glBindTexture(GL_TEXTURE_2D, this->bitmap->getTextureId());
             glBegin(GL_QUADS);
                 glTexCoord2d(0, 1);
-                glVertex2f(0, 0);
+                glVertex2f(
+                    this->ox * iCosR + this->oy * sinR,
+                    this->oy * iCosR - this->ox * sinR
+                );
 
                 glTexCoord2d(1, 1);
-                glVertex2f(this->bitmap->getWidth(), 0);
+                glVertex2f(
+                    this->ox + wDiff * cosR + this->oy * sinR,
+                    this->oy * iCosR + wDiff * sinR
+                );
 
                 glTexCoord2d(1, 0);
-                glVertex2f(this->bitmap->getWidth(), this->bitmap->getHeight());
+                glVertex2f(
+                    this->ox + wDiff * cosR - hDiff * sinR,
+                    this->oy + hDiff * cosR + wDiff * sinR
+                );
 
                 glTexCoord2d(0, 0);
-                glVertex2f(0, this->bitmap->getHeight());
+                glVertex2f(
+                    this->ox * iCosR - hDiff * sinR,
+                    this->oy + hDiff * cosR - this->ox * sinR
+                );
             glEnd();
 
         }

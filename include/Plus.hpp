@@ -38,8 +38,7 @@
 #include <string>
 #include <sstream>
 #include <stack>
-#include <functional>
-#include <math.h>
+#include <cmath>
 
 /* Library Includes */
 #include <GL/freeglut.h>         // GLUT

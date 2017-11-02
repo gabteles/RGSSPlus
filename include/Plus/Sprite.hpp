@@ -52,6 +52,7 @@ namespace Plus {
         void update();
         virtual void draw();
 
+
     private:
         long x, y;
         unsigned short angle;
