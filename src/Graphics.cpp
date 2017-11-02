@@ -37,20 +37,22 @@ namespace Plus {
         glutCreateWindow(charTitle);
 
         // Resolve style issues (remove sizeable border & maximize button)
-        HWND freeWindow = FindWindow("FreeGLUT", charTitle);
-        long Style = GetWindowLong(freeWindow, GWL_STYLE);
-        Style &= ~(WS_MAXIMIZE|WS_SIZEBOX);
-        SetWindowLong(freeWindow, GWL_STYLE, Style);
+        //HWND freeWindow = FindWindow("FreeGLUT", charTitle);
+        //long Style = GetWindowLong(freeWindow, GWL_STYLE);
+        //Style &= ~(WS_MAXIMIZE|WS_SIZEBOX);
+        //SetWindowLong(freeWindow, GWL_STYLE, Style);
 
         // GL Configuration
         glViewport(0, 0, width, height);
+
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
         gluOrtho2D(0, width, 0, height);
+
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-        //glClearDepth(1.0f);
+        glClearDepth(1.0f);
         glEnable(GL_TEXTURE_2D);
         glDisable(GL_BLEND);
         glEnable(GL_DEPTH_TEST);
@@ -238,10 +240,11 @@ namespace Plus {
     /*
      * Resize screen to specified width/height.
      *
-     * @param unsigned short New width
-     * @param unsigned short New height
+     * @param int New width
+     * @param int New height
      */
-    void _MGraphics::resizeScreen(unsigned short width, unsigned short height){
+    void _MGraphics::resizeScreen(int width, int height){
+        std::cout << std::endl << "Resized: " << width << ", " << height << std::endl;
         // GL Resize
         glViewport(0, 0, width, height);
         glMatrixMode(GL_PROJECTION);

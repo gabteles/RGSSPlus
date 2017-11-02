@@ -31,13 +31,14 @@
                                          */
 
 /* Libraries Compilation Options */
-#define FREEGLUT_STATIC
+//#define FREEGLUT_STATIC
 
 /* Standard Includes */
 #include <iostream>
 #include <string>
 #include <sstream>
 #include <stack>
+#include <functional>
 #include <math.h>
 
 /* Library Includes */

@@ -14,8 +14,7 @@ namespace Plus {
 
         glBindTexture(GL_TEXTURE_2D, this->textureId);
         int w, h;
-        unsigned char* image = SOIL_load_image(filename.c_str(), &w, &h, 0, SOIL_LOAD_RGBA);
-        //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+        unsigned char* image = SOIL_load_image(filename.c_str(), &w, &h, NULL, SOIL_LOAD_RGBA);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);

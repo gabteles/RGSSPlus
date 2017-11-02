@@ -20,7 +20,7 @@ namespace Plus {
             void wait(unsigned int duration);
             void fadein(unsigned int duration);
             void fadeout(unsigned int duration);
-            void resizeScreen(unsigned short width, unsigned short height);
+            static void resizeScreen(int width, int height);
             void playMovie(std::string filename);
 
         private:

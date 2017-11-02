@@ -1,0 +1,24 @@
+cmake_minimum_required(VERSION 2.8)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+
+project(RGSSPlus)
+
+set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/output)
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
+set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
+
+find_package(OpenGL REQUIRED)
+find_package(GLUT REQUIRED)
+find_package(SOIL REQUIRED)
+
+include_directories(
+  "${PROJECT_SOURCE_DIR}/include"
+  ${OPENGL_INCLUDE_DIRS}
+  ${GLUT_INCLUDE_DIRS}
+  ${SOIL_INCLUDE_PATH}
+)
+
+file(GLOB_RECURSE PLUS_SOURCES "${PROJECT_SOURCE_DIR}/src/*.cpp")
+
+add_executable(game ${PLUS_SOURCES})
+target_link_libraries(game ${OPENGL_LIBRARY} ${GLUT_LIBRARY} ${SOIL_LIBRARY})
