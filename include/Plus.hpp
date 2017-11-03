@@ -18,6 +18,8 @@
 #define EXTFUNC(x) IMPORT(x)
 #endif
 
+#define MIN(x,y) (x < y ? x : y)
+
 /* Compilation Options */
 #define PLUS_GRAPHICS_WIDTH  640        /* Default graphics width  */
 #define PLUS_GRAPHICS_HEIGHT 480        /* Default graphics height */

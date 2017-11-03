@@ -57,12 +57,12 @@ namespace Plus {
     }
 
     /*
-     * Set plane's bitmap. NULL to unset.
+     * Set Drawable's bitmap. NULL to unset.
      *
      * @param Plus::Bitmap New bitmap
      * @retun void
      */
-    void Drawable::setBitmap(Plus::Bitmap *bitmap){
+    void Drawable::setBitmap(Plus::Bitmap *bitmap) {
         this->bitmap = bitmap;
     }
 

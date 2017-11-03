@@ -2,6 +2,20 @@
 
 namespace Plus {
     /*
+     * Set sprits's bitmap. NULL to unset.
+     *
+     * @param Plus::Bitmap New bitmap
+     * @retun void
+     */
+    void Sprite::setBitmap(Plus::Bitmap *bitmap) {
+        Drawable::setBitmap(bitmap);
+
+        if (this->bitmap && !this->srcRect) {
+            this->srcRect = new Plus::Rect(0, 0, this->getWidth(), this->getHeight());
+        }
+    }
+
+    /*
      * Get X Position
      *
      * @return long Horizontal position
@@ -246,48 +260,52 @@ namespace Plus {
      * @return void
      */
     void Sprite::draw(){
-        if (this->bitmap and not this->_disposed){
-            glTranslatef(
-                this->x - this->ox,
-                Plus::Graphics.getHeight() - (this->y - this->oy + this->bitmap->getHeight()),
-                0
-            );
-
-            float r    = this->angle * M_PI / 180;
-            float cosR = cos(r);
-            float sinR = sin(r);
-            float iCosR = (1 - cosR);
-            float wDiff = (this->bitmap->getWidth() - this->ox);
-            float hDiff = (this->bitmap->getHeight() - this->oy);
-
-            glBindTexture(GL_TEXTURE_2D, this->bitmap->getTextureId());
-            glBegin(GL_QUADS);
-                glTexCoord2d(0, 1);
-                glVertex2f(
-                    this->ox * iCosR + this->oy * sinR,
-                    this->oy * iCosR - this->ox * sinR
-                );
-
-                glTexCoord2d(1, 1);
-                glVertex2f(
-                    this->ox + wDiff * cosR + this->oy * sinR,
-                    this->oy * iCosR + wDiff * sinR
-                );
-
-                glTexCoord2d(1, 0);
-                glVertex2f(
-                    this->ox + wDiff * cosR - hDiff * sinR,
-                    this->oy + hDiff * cosR + wDiff * sinR
-                );
-
-                glTexCoord2d(0, 0);
-                glVertex2f(
-                    this->ox * iCosR - hDiff * sinR,
-                    this->oy + hDiff * cosR - this->ox * sinR
-                );
-            glEnd();
-
+        if (!this->bitmap || this->_disposed) {
+            return;
         }
+
+        float bitmapWidth = this->bitmap->getWidth();
+        float bitmapHeight = this->bitmap->getHeight();
+
+        float srcRectW = this->srcRect->getWidth();
+        float srcRectH = this->srcRect->getHeight();
+
+        float vertexW = MIN(bitmapWidth, srcRectW);
+        float vertexH = MIN(bitmapHeight, srcRectH);
+
+        float heightAdjust = (srcRectH < bitmapHeight ? bitmapHeight - srcRectH : 0);
+
+        float texLeft = this->srcRect->getX() / bitmapWidth;
+        float texTop = this->srcRect->getY() / bitmapHeight;
+        float texRight = texLeft + (vertexW / bitmapWidth);
+        float texBottom = texTop + (vertexH / bitmapHeight);
+
+        float vertices[] = {
+            0, 0,
+            vertexW, 0,
+            vertexW, vertexH,
+            0, vertexH
+        };
+
+        float texCoords[] = {
+            texLeft,  texBottom,
+            texRight, texBottom,
+            texRight, texTop,
+            texLeft,  texTop
+        };
+
+        glEnableClientState(GL_VERTEX_ARRAY);
+        glEnableClientState(GL_TEXTURE_COORD_ARRAY_EXT);
+        glBindTexture(GL_TEXTURE_2D, this->bitmap->getTextureId());
+        glVertexPointer(2, GL_FLOAT, 0, vertices);
+        glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
+        glTranslatef(this->x, Plus::Graphics.getHeight() - this->y, 0);
+        glRotatef(this->angle, 0.f, 0.f, 1.f);
+        glTranslatef(-this->ox, -(this->oy - heightAdjust), 0);
+        glDrawArrays(GL_QUADS, 0, 4);
+        glDisableClientState(GL_TEXTURE_COORD_ARRAY_EXT);
+        glDisableClientState(GL_VERTEX_ARRAY);
     }
 };
+
 

@@ -10,7 +10,7 @@ namespace Plus {
             this->x             = 0;
             this->y             = 0;
             this->angle         = 0;
-            this->srcRect       = new Plus::Rect();
+            this->srcRect       = NULL;
             this->mirror        = false;
             this->waveAmp       = 0;
             this->waveLength    = 0;
@@ -26,6 +26,7 @@ namespace Plus {
             Sprite();
         };
 
+        void setBitmap(Plus::Bitmap *bitmap);
         long getX();
         void setX(long x);
         long getY();

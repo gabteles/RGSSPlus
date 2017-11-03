@@ -12,7 +12,7 @@ int main(){
     Plus::Graphics.initialize(544, 416);
 
     Plus::Sprite *sprite = new Plus::Sprite();
-    sprite->setBitmap(new Plus::Bitmap("img.png"));
+    sprite->setBitmap(new Plus::Bitmap("img-thing.jpg"));
     double k = 0.1;
 
     float baseX = Plus::Graphics.getWidth() / 2;
@@ -22,6 +22,9 @@ int main(){
     sprite->setY(baseY);
     sprite->setOx(sprite->getWidth() / 2);
     sprite->setOy(sprite->getHeight() / 2);
+
+    Plus::Rect *srcRect = new Plus::Rect(0, 0, 150, 600);
+    sprite->setSrcRect(srcRect);
 
     while (k += 0.000001){
         Plus::Graphics.update();
