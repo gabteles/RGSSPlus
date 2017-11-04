@@ -27,7 +27,6 @@ void print_log(GLuint object)
 // - Flash
 // - Bush
 // - Viewport
-// - Zoom
 // - Opacity
 // - Blend Type
 // - Viewport
@@ -414,11 +413,14 @@ namespace Plus {
         float texRight = texLeft + (vertexW / bitmapWidth);
         float texBottom = texTop + (vertexH / bitmapHeight);
 
+        float zoomedVertX = vertexW * this->zoomX;
+        float zoomedVertY = vertexH * this->zoomY;
+
         float vertices[] = {
             0, 0,
-            vertexW, 0,
-            vertexW, vertexH,
-            0, vertexH
+            zoomedVertX, 0,
+            zoomedVertX, zoomedVertY,
+            0, zoomedVertY
         };
 
         float texCoords[] = {
@@ -451,7 +453,7 @@ namespace Plus {
         glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
         glTranslatef(this->x, Plus::Graphics.getHeight() - this->y, 0);
         glRotatef(this->angle, 0.f, 0.f, 1.f);
-        glTranslatef(-this->ox, -(this->oy - heightAdjust), 0);
+        glTranslatef(-this->ox * this->zoomX, -(this->oy - heightAdjust) * this->zoomY, 0);
         glDrawArrays(GL_QUADS, 0, 4);
         glDisableClientState(GL_TEXTURE_COORD_ARRAY_EXT);
         glDisableClientState(GL_VERTEX_ARRAY);

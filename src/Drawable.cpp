@@ -15,6 +15,8 @@ namespace Plus {
         this->viewport  = new Plus::Viewport();
         this->color     = new Plus::Color();
         this->tone      = new Plus::Tone();
+        this->zoomX     = 1;
+        this->zoomY     = 1;
 
         Plus::Graphics.addObject(this);
     }
@@ -34,6 +36,8 @@ namespace Plus {
         this->viewport  = viewport;
         this->color     = new Plus::Color();
         this->tone      = new Plus::Tone();
+        this->zoomX     = 1;
+        this->zoomY     = 1;
 
         Plus::Graphics.addObject(this);
     }

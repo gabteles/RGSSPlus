@@ -34,6 +34,9 @@ int main(){
     sprite->setColor(new Plus::Color(0, 0, 255, 100));
     sprite->setTone(new Plus::Tone(255, 0, 0, 200));
 
+    sprite->setZoomX(1.25);
+    sprite->setZoomY(1.25);
+
     while (true) {
         k += 1;
         Plus::Graphics.update();
