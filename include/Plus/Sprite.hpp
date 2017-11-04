@@ -5,26 +5,39 @@
 
 namespace Plus {
     class Sprite : public Drawable {
+        struct WaveShaderData {
+            unsigned int program;
+            unsigned int amplitudeLoc;
+            unsigned int lengthLoc;
+            unsigned int phaseLoc;
+            unsigned int speedLoc;
+            unsigned int timeLoc;
+        };
+
     public:
-        Sprite() : Drawable::Drawable(){
+        Sprite() : Drawable::Drawable() {
             this->x             = 0;
             this->y             = 0;
             this->angle         = 0;
             this->srcRect       = NULL;
             this->mirror        = false;
             this->waveAmp       = 0;
-            this->waveLength    = 0;
-            this->waveSpeed     = 360;
+            this->waveLength    = 1;
+            this->waveSpeed     = 0;
             this->wavePhase     = 0;
+            this->waveTimer     = 0;
             this->flashColor    = new Plus::Color();
             this->flashDuration = 0;
             this->bushDepth     = 0;
             this->bushOpacity   = 127;
         };
 
-        Sprite(Plus::Viewport* viewport) : Drawable::Drawable(viewport){
+        Sprite(Plus::Viewport* viewport) : Drawable::Drawable(viewport) {
             Sprite();
         };
+
+        static WaveShaderData* getWaveShaderData();
+        static WaveShaderData* waveShaderData;
 
         void setBitmap(Plus::Bitmap *bitmap);
         long getX();
@@ -59,7 +72,7 @@ namespace Plus {
         unsigned short angle;
         Plus::Rect* srcRect;
         bool mirror;
-        int waveAmp, waveLength, waveSpeed, wavePhase;
+        int waveAmp, waveLength, waveSpeed, wavePhase, waveTimer;
         Plus::Color* flashColor;
         unsigned int bushDepth, flashDuration;
         unsigned char bushOpacity;

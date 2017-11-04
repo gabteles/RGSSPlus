@@ -24,13 +24,19 @@ int main(){
     sprite->setOy(sprite->getHeight() / 2);
 
     Plus::Rect *srcRect = new Plus::Rect(0, 0, 150, 600);
-    sprite->setSrcRect(srcRect);
+    //sprite->setSrcRect(srcRect);
+
+    sprite->setWaveAmp(5);
+    sprite->setWaveSpeed(1);
+    sprite->setWaveLength(75);
+    sprite->setWavePhase(90);
 
     while (k += 0.000001){
         Plus::Graphics.update();
-        sprite->setAngle(k*10);
-        sprite->setX(baseX + 50 * cos(k) + ((Plus::Graphics.getWidth() - sprite->bitmap->getWidth()) / 2));
-        sprite->setY(baseY + 50 * sin(k));
+        sprite->update();
+        //sprite->setAngle(k*10);
+        //sprite->setX(baseX + 50 * cos(k) + ((Plus::Graphics.getWidth() - sprite->bitmap->getWidth()) / 2));
+        //sprite->setY(baseY + 50 * sin(k));
     }
 
     return 0;

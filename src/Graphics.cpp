@@ -23,6 +23,7 @@ namespace Plus {
         this->microsecByFrame = 1000000/60.f;
         this->objects = new stack<Drawable*>();
 
+
         // Fake argc and argv, because we don't want conflicts or
         // unexpected results by passing a combination of arguments
         int argc = 0;
@@ -34,6 +35,9 @@ namespace Plus {
         glutInitWindowSize(width, height);
         glutInitDisplayMode(GLUT_RGBA|GLUT_DOUBLE|GLUT_DEPTH);
         glutCreateWindow(title.c_str());
+
+        // Initialize GLEW.
+        glewInit();
 
         // Resolve style issues (remove sizeable border & maximize button)
         //HWND freeWindow = FindWindow("FreeGLUT", charTitle);

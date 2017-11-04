@@ -1,6 +1,98 @@
 #include <Plus.hpp>
 
+void print_log(GLuint object)
+{
+  GLint log_length = 0;
+  if (glIsShader(object))
+    glGetShaderiv(object, GL_INFO_LOG_LENGTH, &log_length);
+  else if (glIsProgram(object))
+    glGetProgramiv(object, GL_INFO_LOG_LENGTH, &log_length);
+  else {
+    fprintf(stderr, "printlog: Não é um shader ou programa\n");
+    return;
+  }
+
+  char* log = (char*)malloc(log_length);
+
+  if (glIsShader(object))
+    glGetShaderInfoLog(object, log_length, NULL, log);
+  else if (glIsProgram(object))
+    glGetProgramInfoLog(object, log_length, NULL, log);
+
+  fprintf(stderr, "%s", log);
+  free(log);
+}
+
 namespace Plus {
+    // Static variables initialization
+    Sprite::WaveShaderData* Sprite::waveShaderData = NULL;
+
+    /*
+     * Get wave shader GLSL program
+     *
+     * @retun unsigned int OpenGL program
+     */
+    Sprite::WaveShaderData* Sprite::getWaveShaderData() {
+        if (Sprite::waveShaderData != NULL) {
+            return Sprite::waveShaderData;
+        }
+
+
+        const char* vertexShaderSource =
+            "void main(void) {"
+            "  gl_Position = ftransform();"
+            "  gl_TexCoord[0] = gl_MultiTexCoord0;"
+            "}";
+
+        const char* fragmentShaderSource =
+            "#define PI 3.141592\n"
+            "uniform float time;"
+            "uniform float waveAmp;"
+            "uniform float waveLength;"
+            "uniform float wavePhase;"
+            "uniform float waveSpeed;"
+            "uniform sampler2D tex;"
+            "void main(void) {"
+            "  vec2 p = gl_TexCoord[0].xy;"
+            "  p.x = p.x - sin(wavePhase + waveSpeed * time + p.y * 2.0 * PI / waveLength) * waveAmp;"
+            "  gl_FragColor = texture2D(tex, p);"
+            "}";
+
+        unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
+        unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+        unsigned int program = glCreateProgram();
+
+        glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+        glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+        glCompileShader(vertexShader);
+        glCompileShader(fragmentShader);
+        glAttachShader(program, vertexShader);
+        glAttachShader(program, fragmentShader);
+        glLinkProgram(program);
+
+        int link_ok;
+        glGetProgramiv(program, GL_LINK_STATUS, &link_ok);
+
+        if (!link_ok) {
+            print_log(vertexShader);
+            print_log(fragmentShader);
+            print_log(program);
+            return 0;
+        }
+
+        Sprite::WaveShaderData* data = new Sprite::WaveShaderData;
+
+        data->amplitudeLoc = glGetUniformLocation(program, "waveAmp");
+        data->lengthLoc = glGetUniformLocation(program, "waveLength");
+        data->phaseLoc = glGetUniformLocation(program, "wavePhase");
+        data->speedLoc = glGetUniformLocation(program, "waveSpeed");
+        data->timeLoc = glGetUniformLocation(program, "time");
+        data->program = program;
+
+        Sprite::waveShaderData = data;
+        return Sprite::waveShaderData;
+    }
+
     /*
      * Set sprits's bitmap. NULL to unset.
      *
@@ -251,7 +343,7 @@ namespace Plus {
         if (this->flashDuration > 0)
             this->flashDuration--;
 
-        // TODO
+        this->waveTimer = remainder(this->waveTimer + 1, 360);
     }
 
     /*
@@ -297,6 +389,15 @@ namespace Plus {
         glEnableClientState(GL_VERTEX_ARRAY);
         glEnableClientState(GL_TEXTURE_COORD_ARRAY_EXT);
         glBindTexture(GL_TEXTURE_2D, this->bitmap->getTextureId());
+
+        Sprite::WaveShaderData* data = Sprite::getWaveShaderData();
+        glUseProgram(data->program);
+        glUniform1f(data->amplitudeLoc, (this->waveAmp / vertexW));
+        glUniform1f(data->lengthLoc, (this->waveLength / vertexH));
+        glUniform1f(data->phaseLoc, M_PI * this->wavePhase/180.0);
+        glUniform1f(data->speedLoc, this->waveSpeed);
+        glUniform1f(data->timeLoc, this->waveTimer);
+
         glVertexPointer(2, GL_FLOAT, 0, vertices);
         glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
         glTranslatef(this->x, Plus::Graphics.getHeight() - this->y, 0);

@@ -7,6 +7,7 @@ New version of RGSS, written in C++
 - OpenGL
 - GLUT
 - SOIL
+- GLEW
 
 Debian packages:
 - `mesa-common-dev`
@@ -15,3 +16,4 @@ Debian packages:
 - `libxmu-dev`
 - `libxi-dev`
 - `libsoil-dev`
+- `libglew-dev`

@@ -10,15 +10,17 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)
 find_package(SOIL REQUIRED)
+find_package(GLEW REQUIRED)
 
 include_directories(
   "${PROJECT_SOURCE_DIR}/include"
   ${OPENGL_INCLUDE_DIRS}
   ${GLUT_INCLUDE_DIRS}
   ${SOIL_INCLUDE_PATH}
+  ${GLEW_INCLUDE_DIRS}
 )
 
 file(GLOB_RECURSE PLUS_SOURCES "${PROJECT_SOURCE_DIR}/src/*.cpp")
 
 add_executable(game ${PLUS_SOURCES})
-target_link_libraries(game ${OPENGL_LIBRARY} ${GLUT_LIBRARY} ${SOIL_LIBRARY})
+target_link_libraries(game ${OPENGL_LIBRARY} ${GLUT_LIBRARY} ${SOIL_LIBRARY} ${GLEW_LIBRARIES})

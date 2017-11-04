@@ -43,6 +43,7 @@
 #include <cmath>
 
 /* Library Includes */
+#include <GL/glew.h>             // GLEW
 #include <GL/freeglut.h>         // GLUT
 #include <SOIL/SOIL.h>           // SOIL
 #include <GL/gl.h>               // GL
