@@ -42,6 +42,7 @@ int main(){
         Plus::Graphics.update();
         sprite->update();
         sprite->setAngle(k);
+        sprite->setOpacity(remainder(k, 255));
         sprite->setX(baseX + 100 * sin(k*M_PI/180.0));
         sprite->setY(baseY + 100 * cos(k*M_PI/180.0));
     }

@@ -17,6 +17,7 @@ namespace Plus {
         this->tone      = new Plus::Tone();
         this->zoomX     = 1;
         this->zoomY     = 1;
+        this->opacity   = 255;
 
         Plus::Graphics.addObject(this);
     }
@@ -38,6 +39,7 @@ namespace Plus {
         this->tone      = new Plus::Tone();
         this->zoomX     = 1;
         this->zoomY     = 1;
+        this->opacity   = 255;
 
         Plus::Graphics.addObject(this);
     }

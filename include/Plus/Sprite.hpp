@@ -7,6 +7,8 @@ namespace Plus {
     class Sprite : public Drawable {
         struct ShaderData {
             unsigned int program;
+            // Opacity
+            unsigned int opacityLoc;
             // Tone
             unsigned int toneLoc;
             // Color

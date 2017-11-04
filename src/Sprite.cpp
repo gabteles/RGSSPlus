@@ -27,7 +27,7 @@ void print_log(GLuint object)
 // - Flash
 // - Bush
 // - Viewport
-// - Opacity
+// - Visibility
 // - Blend Type
 // - Viewport
 
@@ -69,6 +69,7 @@ namespace Plus {
             "uniform float texRight;"
             "uniform vec4 tone;"
             "uniform vec4 color;"
+            "uniform float opacity;"
             "uniform sampler2D tex;"
             "void main(void) {"
             "  vec2 p = gl_TexCoord[0].xy;"
@@ -80,8 +81,9 @@ namespace Plus {
             "    vec4 colorFrag = normColor + baseFrag * (1.0 - normColor.w);"
             "    vec4 toneFrag = (colorFrag + vec4(normTone.xyz, 1.0));"
             "    float luminance = 0.21 * toneFrag.x + 0.72 * toneFrag.y + 0.07 * toneFrag.z;"
-            "    vec4 grayFrag = vec4(luminance, luminance, luminance, 1.0);"
-            "    gl_FragColor = grayFrag * normTone.w + toneFrag * (1.0 - normTone.w);"
+            "    vec4 luminanceFrag = vec4(luminance, luminance, luminance, 1.0);"
+            "    vec4 grayFrag = luminanceFrag * normTone.w + toneFrag * (1.0 - normTone.w);"
+            "    gl_FragColor = grayFrag * vec4(1.0, 1.0, 1.0, opacity/255.0);"
             "  } else { "
             "    gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);"
             "  }"
@@ -110,6 +112,8 @@ namespace Plus {
         }
 
         Sprite::ShaderData* data = new Sprite::ShaderData;
+
+        data->opacityLoc = glGetUniformLocation(program, "opacity");
 
         data->toneLoc = glGetUniformLocation(program, "tone");
         data->colorLoc = glGetUniformLocation(program, "color");
@@ -435,7 +439,10 @@ namespace Plus {
         glBindTexture(GL_TEXTURE_2D, this->bitmap->getTextureId());
 
         Sprite::ShaderData* data = Sprite::getShaderData();
+
         glUseProgram(data->program);
+
+        glUniform1f(data->opacityLoc, this->opacity);
         glUniform1f(data->pixelAmplitudeLoc, this->waveAmp);
         glUniform1f(data->amplitudeLoc, (this->waveAmp / vertexW));
         glUniform1f(data->lengthLoc, (this->waveLength / vertexH));
