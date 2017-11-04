@@ -7,6 +7,7 @@ namespace Plus {
     class Sprite : public Drawable {
         struct WaveShaderData {
             unsigned int program;
+            unsigned int pixelAmplitudeLoc;
             unsigned int amplitudeLoc;
             unsigned int lengthLoc;
             unsigned int phaseLoc;
@@ -14,6 +15,7 @@ namespace Plus {
             unsigned int timeLoc;
             unsigned int texRightLoc;
             unsigned int texLeftLoc;
+            unsigned int vertCenterXLoc;
         };
 
     public:
@@ -52,14 +54,14 @@ namespace Plus {
         void setAngle(unsigned short angle);
         bool getMirror();
         void setMirror(bool mirror);
-        int getWaveAmp();
-        void setWaveAmp(int waveAmp);
-        int getWaveLength();
-        void setWaveLength(int waveLength);
+        float getWaveAmp();
+        void setWaveAmp(float waveAmp);
+        float getWaveLength();
+        void setWaveLength(float waveLength);
         float getWaveSpeed();
         void setWaveSpeed(float waveSpeed);
-        int getWavePhase();
-        void setWavePhase(int wavePhase);
+        float getWavePhase();
+        void setWavePhase(float wavePhase);
         unsigned int getBushDepth();
         void setBushDepth(unsigned int bushDepth);
         unsigned char getBushOpacity();
@@ -74,9 +76,7 @@ namespace Plus {
         unsigned short angle;
         Plus::Rect* srcRect;
         bool mirror;
-        int waveAmp, waveLength, wavePhase;
-        double waveSpeed;
-        float waveTimer;
+        float waveAmp, waveLength, wavePhase, waveSpeed, waveTimer;
         Plus::Color* flashColor;
         unsigned int bushDepth, flashDuration;
         unsigned char bushOpacity;

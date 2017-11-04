@@ -39,9 +39,15 @@ namespace Plus {
 
 
         const char* vertexShaderSource =
+            "uniform float pixelWaveAmp;"
+            "uniform float waveAmp;"
+            "uniform float vertCenterX;"
             "void main(void) {"
-            "  gl_Position = ftransform();"
-            "  gl_TexCoord[0] = gl_MultiTexCoord0;"
+            "  float modifier = (gl_Vertex.x < vertCenterX ? -0.5 : 0.5);"
+            "  vec4 pixelModifierVec = vec4(pixelWaveAmp, 0, 0, 0) * modifier;"
+            "  vec4 texModifierVec = vec4(waveAmp, 0, 0, 0) * modifier;"
+            "  gl_Position = gl_ModelViewProjectionMatrix * (gl_Vertex + pixelModifierVec);"
+            "  gl_TexCoord[0] = gl_MultiTexCoord0 + texModifierVec;"
             "}";
 
         const char* fragmentShaderSource =
@@ -56,7 +62,7 @@ namespace Plus {
             "uniform sampler2D tex;"
             "void main(void) {"
             "  vec2 p = gl_TexCoord[0].xy;"
-            "  p.x = p.x - sin(wavePhase + waveSpeed * time + p.y * 2.0 * PI / waveLength) * waveAmp;"
+            "  p.x += sin(wavePhase + waveSpeed * time + p.y * 2.0 * PI / waveLength) * waveAmp/2.0;"
             "  if (p.x >= texLeft && p.x <= texRight) {"
             "    gl_FragColor = texture2D(tex, p);"
             "  } else { "
@@ -88,6 +94,7 @@ namespace Plus {
 
         Sprite::WaveShaderData* data = new Sprite::WaveShaderData;
 
+        data->pixelAmplitudeLoc = glGetUniformLocation(program, "pixelWaveAmp");
         data->amplitudeLoc = glGetUniformLocation(program, "waveAmp");
         data->lengthLoc = glGetUniformLocation(program, "waveLength");
         data->phaseLoc = glGetUniformLocation(program, "wavePhase");
@@ -95,6 +102,7 @@ namespace Plus {
         data->timeLoc = glGetUniformLocation(program, "time");
         data->texRightLoc = glGetUniformLocation(program, "texRight");
         data->texLeftLoc = glGetUniformLocation(program, "texLeft");
+        data->vertCenterXLoc = glGetUniformLocation(program, "vertCenterX");
         data->program = program;
 
         Sprite::waveShaderData = data;
@@ -214,19 +222,19 @@ namespace Plus {
      * Get wave amplitude of the sprite's renderization.
      * Effect will only update with calling sprite's update method.
      *
-     * @return int Wave Amplitude
+     * @return float Wave Amplitude
      */
-    int Sprite::getWaveAmp(){
+    float Sprite::getWaveAmp(){
         return this->waveAmp;
     }
 
     /*
      * Set wave amplitude
      *
-     * @param int New amplitude
+     * @param float New amplitude
      * @return void
      */
-    void Sprite::setWaveAmp(int waveAmp){
+    void Sprite::setWaveAmp(float waveAmp){
         this->waveAmp = waveAmp;
     }
 
@@ -234,19 +242,19 @@ namespace Plus {
      * Get wave length of the sprite's renderization.
      * Effect will only update with calling sprite's update method.
      *
-     * @return int Wave Length
+     * @return float Wave Length
      */
-    int Sprite::getWaveLength(){
+    float Sprite::getWaveLength(){
         return this->waveLength;
     }
 
     /*
      * Set wave length
      *
-     * @param int New length
+     * @param float New length
      * @return void
      */
-    void Sprite::setWaveLength(int waveLength){
+    void Sprite::setWaveLength(float waveLength){
         this->waveLength = waveLength;
     }
 
@@ -275,19 +283,19 @@ namespace Plus {
      * of the top line of the sprite using an angle of up to 360 degrees.
      * Effect will only update with calling sprite's update method.
      *
-     * @return int Wave Phase
+     * @return float Wave Phase
      */
-    int Sprite::getWavePhase(){
+    float Sprite::getWavePhase(){
         return this->wavePhase;
     }
 
     /*
      * Set wave phase
      *
-     * @param int New phase
+     * @param float New phase
      * @return void
      */
-    void Sprite::setWavePhase(int wavePhase){
+    void Sprite::setWavePhase(float wavePhase){
         this->wavePhase = wavePhase;
     }
 
@@ -404,6 +412,7 @@ namespace Plus {
 
         Sprite::WaveShaderData* data = Sprite::getWaveShaderData();
         glUseProgram(data->program);
+        glUniform1f(data->pixelAmplitudeLoc, this->waveAmp);
         glUniform1f(data->amplitudeLoc, (this->waveAmp / vertexW));
         glUniform1f(data->lengthLoc, (this->waveLength / vertexH));
         glUniform1f(data->phaseLoc, M_PI * this->wavePhase/180.0);
@@ -411,6 +420,7 @@ namespace Plus {
         glUniform1f(data->timeLoc, this->waveTimer);
         glUniform1f(data->texRightLoc, texRight);
         glUniform1f(data->texLeftLoc, texLeft);
+        glUniform1f(data->vertCenterXLoc, vertexW/2);
 
         glVertexPointer(2, GL_FLOAT, 0, vertices);
         glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
