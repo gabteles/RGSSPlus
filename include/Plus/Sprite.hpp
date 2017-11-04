@@ -5,8 +5,13 @@
 
 namespace Plus {
     class Sprite : public Drawable {
-        struct WaveShaderData {
+        struct ShaderData {
             unsigned int program;
+            // Tone
+            unsigned int toneLoc;
+            // Color
+            unsigned int colorLoc;
+            // Wave
             unsigned int pixelAmplitudeLoc;
             unsigned int amplitudeLoc;
             unsigned int lengthLoc;
@@ -33,15 +38,15 @@ namespace Plus {
             this->flashColor    = new Plus::Color();
             this->flashDuration = 0;
             this->bushDepth     = 0;
-            this->bushOpacity   = 127;
+            this->bushOpacity   = 128;
         };
 
         Sprite(Plus::Viewport* viewport) : Drawable::Drawable(viewport) {
             Sprite();
         };
 
-        static WaveShaderData* getWaveShaderData();
-        static WaveShaderData* waveShaderData;
+        static ShaderData* getShaderData();
+        static ShaderData* shaderData;
 
         void setBitmap(Plus::Bitmap *bitmap);
         long getX();

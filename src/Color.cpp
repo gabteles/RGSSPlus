@@ -16,12 +16,12 @@ namespace Plus {
     /*
      * Construct a color with RGB data
      *
-     * @param double Red channel
-     * @param double Green channel
-     * @param double Blue channel
+     * @param float Red channel
+     * @param float Green channel
+     * @param float Blue channel
      * @return Plus::Color Color with RGB data + 255 Alpha Channel
      */
-    Color::Color(double red, double green, double blue){
+    Color::Color(float red, float green, float blue){
         this->r = red;
         this->g = green;
         this->b = blue;
@@ -31,13 +31,13 @@ namespace Plus {
     /*
      * Construct a color with RGBA data
      *
-     * @param double Red channel
-     * @param double Green channel
-     * @param double Blue channel
-     * @param double Alpha channel
+     * @param float Red channel
+     * @param float Green channel
+     * @param float Blue channel
+     * @param float Alpha channel
      * @return Plus::Color Color with RGBA data
      */
-    Color::Color(double red, double green, double blue, double alpha){
+    Color::Color(float red, float green, float blue, float alpha){
         this->r = red;
         this->g = green;
         this->b = blue;
@@ -60,12 +60,12 @@ namespace Plus {
     /*
      * Change RGB channels
      *
-     * @param double Red channel
-     * @param double Green channel
-     * @param double Blue channel
+     * @param float Red channel
+     * @param float Green channel
+     * @param float Blue channel
      * @return void
      */
-    void Color::set(double red, double green, double blue){
+    void Color::set(float red, float green, float blue){
         this->r = red;
         this->g = green;
         this->b = blue;
@@ -74,13 +74,13 @@ namespace Plus {
     /*
      * Change RGBA channels
      *
-     * @param double Red channel
-     * @param double Green channel
-     * @param double Blue channel
-     * @param double Alpha channel
+     * @param float Red channel
+     * @param float Green channel
+     * @param float Blue channel
+     * @param float Alpha channel
      * @return void
      */
-    void Color::set(double red, double green, double blue, double alpha){
+    void Color::set(float red, float green, float blue, float alpha){
         this->r = red;
         this->g = green;
         this->b = blue;
@@ -102,105 +102,104 @@ namespace Plus {
     /*
      * Set red channel value
      *
-     * @param double Value
+     * @param float Value
      * @return void
      */
-    void Color::setRed(double red){
+    void Color::setRed(float red){
         this->r = red;
     }
 
     /*
      * Set green channel value
      *
-     * @param double Value
+     * @param float Value
      * @return void
      */
-    void Color::setGreen(double green){
+    void Color::setGreen(float green){
         this->g = green;
     }
 
     /*
      * Set blue channel value
      *
-     * @param double Value
+     * @param float Value
      * @return void
      */
-    void Color::setBlue(double blue){
+    void Color::setBlue(float blue){
         this->b = blue;
     }
 
     /*
      * Set alpha channel value
      *
-     * @param double Value
+     * @param float Value
      * @return void
      */
-    void Color::setAlpha(double alpha){
+    void Color::setAlpha(float alpha){
         this->a = alpha;
     }
 
     /*
      * Get red channel value
      *
-     * @return double Value
+     * @return float Value
      */
-    double Color::getRed(){
+    float Color::getRed(){
         return this->r;
     }
 
     /*
      * Get green channel value
      *
-     * @return double Value
+     * @return float Value
      */
-    double Color::getGreen(){
+    float Color::getGreen(){
         return this->g;
     }
 
     /*
      * Get blue channel value
      *
-     * @return double Value
+     * @return float Value
      */
-    double Color::getBlue(){
+    float Color::getBlue(){
         return this->b;
     }
 
     /*
      * Get alpha channel value
      *
-     * @return double Value
+     * @return float Value
      */
-    double Color::getAlpha(){
+    float Color::getAlpha(){
         return this->a;
     }
 
     /*
      * Simplify color in a structure
      *
-     * @return Color::packedColor Packed color data
+     * @return float* Packed color data
      */
-    Color::packedColor Color::dump(){
-        packedColor pack;
-        pack.red   = this->r;
-        pack.green = this->g;
-        pack.blue  = this->b;
-        pack.alpha = this->a;
-
-        return pack;
+    float* Color::dump(){
+        float* dump = new float[4];
+        dump[0] = this->r;
+        dump[1] = this->g;
+        dump[2] = this->b;
+        dump[3] = this->a;
+        return dump;
     }
 
     /*
      * Load packed color data
      *
-     * @param Color::packedColor Packed color data
+     * @param float* Packed color data
      * @return void
      */
-    void Color::load(Color::packedColor pack){
-        this->r = pack.red;
-        this->g = pack.green;
-        this->b = pack.blue;
-        this->a = pack.alpha;
+    void Color::load(float* pack) {
+        this->r = *pack++;
+        this->g = *pack++;
+        this->b = *pack++;
+        this->a = *pack++;
     }
 
     /*

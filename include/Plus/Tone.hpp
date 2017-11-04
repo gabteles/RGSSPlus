@@ -3,35 +3,28 @@
 
 namespace Plus {
     class Tone {
-        struct packedTone {
-            double red;
-            double green;
-            double blue;
-            double gray;
-        };
-
     public:
         Tone();
-        Tone(double red, double green, double blue);
-        Tone(double red, double green, double blue, double gray);
+        Tone(float red, float green, float blue);
+        Tone(float red, float green, float blue, float gray);
         void set(Plus::Tone* src);
-        void set(double red, double green, double blue);
-        void set(double red, double green, double blue, double gray);
+        void set(float red, float green, float blue);
+        void set(float red, float green, float blue, float gray);
         void empty();
-        void setRed(double red);
-        void setGreen(double green);
-        void setBlue(double blue);
-        void setGray(double gray);
-        double getRed();
-        double getGreen();
-        double getBlue();
-        double getGray();
-        packedTone dump();
-        void load(packedTone pack);
+        void setRed(float red);
+        void setGreen(float green);
+        void setBlue(float blue);
+        void setGray(float gray);
+        float getRed();
+        float getGreen();
+        float getBlue();
+        float getGray();
+        float* dump();
+        void load(float* pack);
         ~Tone();
 
     private:
-        double r, g, b, gr;
+        float r, g, b, gr;
     };
 };
 

@@ -23,18 +23,29 @@ void print_log(GLuint object)
   free(log);
 }
 
+// TODO:
+// - Tone
+// - Color
+// - Flash
+// - Bush
+// - Viewport
+// - Zoom
+// - Opacity
+// - Blend Type
+// - Viewport
+
 namespace Plus {
     // Static variables initialization
-    Sprite::WaveShaderData* Sprite::waveShaderData = NULL;
+    Sprite::ShaderData* Sprite::shaderData = NULL;
 
     /*
      * Get wave shader GLSL program
      *
      * @retun unsigned int OpenGL program
      */
-    Sprite::WaveShaderData* Sprite::getWaveShaderData() {
-        if (Sprite::waveShaderData != NULL) {
-            return Sprite::waveShaderData;
+    Sprite::ShaderData* Sprite::getShaderData() {
+        if (Sprite::shaderData != NULL) {
+            return Sprite::shaderData;
         }
 
 
@@ -59,14 +70,23 @@ namespace Plus {
             "uniform float waveSpeed;"
             "uniform float texLeft;"
             "uniform float texRight;"
+            "uniform vec4 tone;"
+            "uniform vec4 color;"
             "uniform sampler2D tex;"
             "void main(void) {"
             "  vec2 p = gl_TexCoord[0].xy;"
             "  p.x += sin(wavePhase + waveSpeed * time + p.y * 2.0 * PI / waveLength) * waveAmp/2.0;"
             "  if (p.x >= texLeft && p.x <= texRight) {"
-            "    gl_FragColor = texture2D(tex, p);"
+            "    vec4 baseFrag = texture2D(tex, p);"
+            "    vec4 normColor = color/255.0;"
+            "    vec4 normTone = tone/255.0;"
+            "    vec4 colorFrag = normColor + baseFrag * (1.0 - normColor.w);"
+            "    vec4 toneFrag = (colorFrag + vec4(normTone.xyz, 1.0));"
+            "    float luminance = 0.21 * toneFrag.x + 0.72 * toneFrag.y + 0.07 * toneFrag.z;"
+            "    vec4 grayFrag = vec4(luminance, luminance, luminance, 1.0);"
+            "    gl_FragColor = grayFrag * normTone.w + toneFrag * (1.0 - normTone.w);"
             "  } else { "
-            "    gl_FragColor = vec4(0, 0, 0, 0);"
+            "    gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);"
             "  }"
             "}";
 
@@ -92,7 +112,10 @@ namespace Plus {
             return 0;
         }
 
-        Sprite::WaveShaderData* data = new Sprite::WaveShaderData;
+        Sprite::ShaderData* data = new Sprite::ShaderData;
+
+        data->toneLoc = glGetUniformLocation(program, "tone");
+        data->colorLoc = glGetUniformLocation(program, "color");
 
         data->pixelAmplitudeLoc = glGetUniformLocation(program, "pixelWaveAmp");
         data->amplitudeLoc = glGetUniformLocation(program, "waveAmp");
@@ -103,10 +126,11 @@ namespace Plus {
         data->texRightLoc = glGetUniformLocation(program, "texRight");
         data->texLeftLoc = glGetUniformLocation(program, "texLeft");
         data->vertCenterXLoc = glGetUniformLocation(program, "vertCenterX");
+
         data->program = program;
 
-        Sprite::waveShaderData = data;
-        return Sprite::waveShaderData;
+        Sprite::shaderData = data;
+        return Sprite::shaderData;
     }
 
     /*
@@ -335,7 +359,7 @@ namespace Plus {
      * @param unsigned char New bush opacity
      * @return void
      */
-    void Sprite::setBushOpacity(unsigned char bushOpacity){
+    void Sprite::setBushOpacity(unsigned char bushOpacity) {
         this->bushOpacity = bushOpacity;
     }
 
@@ -345,7 +369,7 @@ namespace Plus {
      * @param Plus::Color Flash color. If null, Color(0, 0, 0, 0) will be used
      * @param unsigned int Number of frames flashing will last.
      */
-    void Sprite::flash(Plus::Color* color, unsigned int duration){
+    void Sprite::flash(Plus::Color* color, unsigned int duration) {
         this->flashColor    = color;
         this->flashDuration = duration;
     }
@@ -354,7 +378,7 @@ namespace Plus {
      * Updates the sprite's animations. It's not necessary to call if flash
      * or wave aren't in progress.
      */
-    void Sprite::update(){
+    void Sprite::update() {
         // Update flash
         if (this->flashDuration > 0)
             this->flashDuration--;
@@ -367,7 +391,7 @@ namespace Plus {
      *
      * @return void
      */
-    void Sprite::draw(){
+    void Sprite::draw() {
         if (!this->bitmap || this->_disposed) {
             return;
         }
@@ -410,7 +434,7 @@ namespace Plus {
         glEnableClientState(GL_TEXTURE_COORD_ARRAY_EXT);
         glBindTexture(GL_TEXTURE_2D, this->bitmap->getTextureId());
 
-        Sprite::WaveShaderData* data = Sprite::getWaveShaderData();
+        Sprite::ShaderData* data = Sprite::getShaderData();
         glUseProgram(data->program);
         glUniform1f(data->pixelAmplitudeLoc, this->waveAmp);
         glUniform1f(data->amplitudeLoc, (this->waveAmp / vertexW));
@@ -421,6 +445,9 @@ namespace Plus {
         glUniform1f(data->texRightLoc, texRight);
         glUniform1f(data->texLeftLoc, texLeft);
         glUniform1f(data->vertCenterXLoc, vertexW/2);
+
+        glUniform4fv(data->toneLoc, 1, this->tone->dump());
+        glUniform4fv(data->colorLoc, 1, this->color->dump());
 
         glVertexPointer(2, GL_FLOAT, 0, vertices);
         glTexCoordPointer(2, GL_FLOAT, 0, texCoords);

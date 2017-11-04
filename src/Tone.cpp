@@ -16,12 +16,12 @@ namespace Plus {
     /*
      * Construct a tone with RGB data
      *
-     * @param double Red channel
-     * @param double Green channel
-     * @param double Blue channel
+     * @param float Red channel
+     * @param float Green channel
+     * @param float Blue channel
      * @return Plus::Tone Tone with RGB data + Neutral (0) Alpha Channel
      */
-    Tone::Tone(double red, double green, double blue){
+    Tone::Tone(float red, float green, float blue){
         this->r  = red;
         this->g  = green;
         this->b  = blue;
@@ -31,13 +31,13 @@ namespace Plus {
     /*
      * Construct a color with RGBA data
      *
-     * @param double Red channel
-     * @param double Green channel
-     * @param double Blue channel
-     * @param double Gray channel
+     * @param float Red channel
+     * @param float Green channel
+     * @param float Blue channel
+     * @param float Gray channel
      * @return Plus::Tone Tone with RGBGr data
      */
-    Tone::Tone(double red, double green, double blue, double gray){
+    Tone::Tone(float red, float green, float blue, float gray){
         this->r  = red;
         this->g  = green;
         this->b  = blue;
@@ -60,12 +60,12 @@ namespace Plus {
     /*
      * Change RGB channels
      *
-     * @param double Red channel
-     * @param double Green channel
-     * @param double Blue channel
+     * @param float Red channel
+     * @param float Green channel
+     * @param float Blue channel
      * @return void
      */
-    void Tone::set(double red, double green, double blue){
+    void Tone::set(float red, float green, float blue){
         this->r = red;
         this->g = green;
         this->b = blue;
@@ -74,13 +74,13 @@ namespace Plus {
     /*
      * Change RGBGr channels
      *
-     * @param double Red channel
-     * @param double Green channel
-     * @param double Blue channel
-     * @param double Gray channel
+     * @param float Red channel
+     * @param float Green channel
+     * @param float Blue channel
+     * @param float Gray channel
      * @return void
      */
-    void Tone::set(double red, double green, double blue, double gray){
+    void Tone::set(float red, float green, float blue, float gray){
         this->r  = red;
         this->g  = green;
         this->b  = blue;
@@ -102,104 +102,104 @@ namespace Plus {
     /*
      * Set red channel value
      *
-     * @param double Value
+     * @param float Value
      * @return void
      */
-    void Tone::setRed(double red){
+    void Tone::setRed(float red){
         this->r = r;
     }
 
     /*
      * Set green channel value
      *
-     * @param double Value
+     * @param float Value
      * @return void
      */
-    void Tone::setGreen(double green){
+    void Tone::setGreen(float green){
         this->g = green;
     }
 
     /*
      * Set blue channel value
      *
-     * @param double Value
+     * @param float Value
      * @return void
      */
-    void Tone::setBlue(double blue){
+    void Tone::setBlue(float blue){
         this->b = blue;
     }
 
     /*
      * Set gray channel value
      *
-     * @param double Value
+     * @param float Value
      * @return void
      */
-    void Tone::setGray(double gray){
+    void Tone::setGray(float gray){
         this->g = gray;
     }
 
     /*
      * Get red channel value
      *
-     * @return double Value
+     * @return float Value
      */
-    double Tone::getRed(){
+    float Tone::getRed(){
         return this->r;
     }
 
     /*
      * Get green channel value
      *
-     * @return double Value
+     * @return float Value
      */
-    double Tone::getGreen(){
+    float Tone::getGreen(){
         return this->g;
     }
 
     /*
      * Get blue channel value
      *
-     * @return double Value
+     * @return float Value
      */
-    double Tone::getBlue(){
+    float Tone::getBlue(){
         return this->b;
     }
 
     /*
      * Get gray channel value
      *
-     * @return double Value
+     * @return float Value
      */
-    double Tone::getGray(){
+    float Tone::getGray(){
         return this->gr;
     }
 
     /*
      * Simplify tone in a structure
      *
-     * @return Plus::Tone::packedTone Packed tone data
+     * @return float* Packed tone data
      */
-    Tone::packedTone Tone::dump(){
-        packedTone pack;
-        pack.red   = this->r;
-        pack.green = this->g;
-        pack.blue  = this->b;
-        pack.gray  = this->gr;
-        return pack;
+    float* Tone::dump(){
+        float* dump = new float[4];
+        dump[0] = this->r;
+        dump[1] = this->g;
+        dump[2] = this->b;
+        dump[3] = this->gr;
+        return dump;
     }
 
     /*
      * Load packed tone data
      *
-     * @param Plus::Tone::packedTone Packed tone data
+     * @param float* Packed tone data
      * @return void
      */
-    void Tone::load(Tone::packedTone pack){
-        this->r  = pack.red;
-        this->g  = pack.green;
-        this->b  = pack.blue;
-        this->gr = pack.gray;
+    void Tone::load(float* pack){
+        this->r  = *pack++;
+        this->g  = *pack++;
+        this->b  = *pack++;
+        this->gr = *pack++;
     }
 
     /*
