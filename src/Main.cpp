@@ -27,14 +27,15 @@ int main(){
     sprite->setSrcRect(srcRect);
 
     sprite->setWaveAmp(5);
-    sprite->setWaveSpeed(1);
+    sprite->setWaveSpeed(5);
     sprite->setWaveLength(75);
     sprite->setWavePhase(90);
 
-    while (k += 0.000001){
+    while (true) {
+        k += 1;
         Plus::Graphics.update();
         sprite->update();
-        //sprite->setAngle(k*10);
+        //sprite->setAngle(k);
         //sprite->setX(baseX + 50 * cos(k) + ((Plus::Graphics.getWidth() - sprite->bitmap->getWidth()) / 2));
         //sprite->setY(baseY + 50 * sin(k));
     }

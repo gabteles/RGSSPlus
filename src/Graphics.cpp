@@ -192,29 +192,42 @@ namespace Plus {
      *
      * @return void
      */
-    void _MGraphics::update(){
+    void _MGraphics::update() {
         glutMainLoopEvent();
 
-        // Correct frame rating? (Probably not)
-        if (this->timer->getElapsedTimeInMicroSec() > this->microsecByFrame){
-            this->realFrameRateBuffer++;
-            glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+        // Better framerate limitting would be no FPS limitting.
+        // Objects should move according to the last frame time.
+        // TODO: Maybe find an away to compensate larger frames
+        //       with less wait in smaller frames.
+        this->timer->reset();
+        this->draw();
+        while (this->timer->getElapsedTimeInMicroSec() <= this->microsecByFrame) { }
 
-            for (Drawable* obj : *this->objects) {
-                glLoadIdentity(); // Reset matrix for each Drawable
-                obj->draw();
-            }
-
-            glutSwapBuffers();
-            this->timer->reset();
-        }
-
+        // After one second, reset framerate counter
         if (this->secTimer->getElapsedTimeInMicroSec() > 1000000) {
             this->realFrameRate = this->realFrameRateBuffer;
             this->realFrameRateBuffer = 0;
             this->secTimer->reset();
         }
     };
+
+    /*
+     * Does the actual graphic rendering
+     *
+     * @return void
+     */
+    void _MGraphics::draw() {
+        this->realFrameRateBuffer++;
+
+        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+
+        for (Drawable* obj : *this->objects) {
+            glLoadIdentity();
+            obj->draw();
+        }
+
+        glutSwapBuffers();
+    }
 
     /*
      * Sleep by a moment, without letting graphics die

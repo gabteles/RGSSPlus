@@ -18,6 +18,7 @@ namespace Plus {
             void addObject(Drawable* object);
             void removeObject(Drawable* object);
             void update();
+            void draw();
             void wait(unsigned int duration);
             void fadein(unsigned int duration);
             void fadeout(unsigned int duration);

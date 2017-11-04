@@ -351,7 +351,7 @@ namespace Plus {
         if (this->flashDuration > 0)
             this->flashDuration--;
 
-        this->waveTimer = remainder(this->waveTimer + 1, 180);
+        this->waveTimer = remainder(this->waveTimer + (1.0/Plus::Graphics.getFrameRate()), 180);
     }
 
     /*
