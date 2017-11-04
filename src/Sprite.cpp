@@ -44,17 +44,17 @@ namespace Plus {
             return Sprite::shaderData;
         }
 
-
         const char* vertexShaderSource =
             "uniform float pixelWaveAmp;"
             "uniform float waveAmp;"
             "uniform float vertCenterX;"
+            "uniform int mirrored;"
             "void main(void) {"
             "  float modifier = (gl_Vertex.x < vertCenterX ? -0.5 : 0.5);"
-            "  vec4 pixelModifierVec = vec4(pixelWaveAmp, 0, 0, 0) * modifier;"
-            "  vec4 texModifierVec = vec4(waveAmp, 0, 0, 0) * modifier;"
-            "  gl_Position = gl_ModelViewProjectionMatrix * (gl_Vertex + pixelModifierVec);"
-            "  gl_TexCoord[0] = gl_MultiTexCoord0 + texModifierVec;"
+            "  vec4 vertMod = vec4(pixelWaveAmp, 0, 0, 0) * modifier;"
+            "  vec4 texMod = vec4(waveAmp, 0, 0, 0) * modifier * (mirrored == 1 ? -1.0 : 1.0);"
+            "  gl_Position = gl_ModelViewProjectionMatrix * (gl_Vertex + vertMod);"
+            "  gl_TexCoord[0] = gl_MultiTexCoord0 + texMod;"
             "}";
 
         const char* fragmentShaderSource =
@@ -112,6 +112,7 @@ namespace Plus {
 
         Sprite::ShaderData* data = new Sprite::ShaderData;
 
+        data->mirroredLoc = glGetUniformLocation(program, "mirrored");
         data->opacityLoc = glGetUniformLocation(program, "opacity");
 
         data->toneLoc = glGetUniformLocation(program, "tone");
@@ -419,6 +420,14 @@ namespace Plus {
         float zoomedVertX = vertexW * this->zoomX;
         float zoomedVertY = vertexH * this->zoomY;
 
+        float tmpTexCoord;
+
+        if (this->mirror) {
+            tmpTexCoord = texRight;
+            texRight = texLeft;
+            texLeft = tmpTexCoord;
+        }
+
         float vertices[] = {
             0, 0,
             zoomedVertX, 0,
@@ -433,6 +442,13 @@ namespace Plus {
             texLeft,  texTop
         };
 
+        if (this->mirror) {
+            tmpTexCoord = texRight;
+            texRight = texLeft;
+            texLeft = tmpTexCoord;
+        }
+
+
         glEnableClientState(GL_VERTEX_ARRAY);
         glEnableClientState(GL_TEXTURE_COORD_ARRAY_EXT);
         glBindTexture(GL_TEXTURE_2D, this->bitmap->getTextureId());
@@ -441,6 +457,7 @@ namespace Plus {
 
         glUseProgram(data->program);
 
+        glUniform1i(data->mirroredLoc, this->mirror);
         glUniform1f(data->opacityLoc, this->opacity);
         glUniform1f(data->pixelAmplitudeLoc, this->waveAmp);
         glUniform1f(data->amplitudeLoc, (this->waveAmp / vertexW));

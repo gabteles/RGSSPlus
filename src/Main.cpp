@@ -23,7 +23,7 @@ int main(){
     sprite->setOx(sprite->getWidth() / 2);
     sprite->setOy(sprite->getHeight() / 2);
 
-    Plus::Rect *srcRect = new Plus::Rect(0, 0, 150, 150);
+    Plus::Rect *srcRect = new Plus::Rect(0, 0, 150, 300);
     sprite->setSrcRect(srcRect);
 
     sprite->setWaveSpeed(5);
@@ -37,17 +37,19 @@ int main(){
     sprite->setZoomX(1.25);
     sprite->setZoomY(1.25);
 
+    sprite->setMirror(true);
+
     while (true) {
         k += 1;
         Plus::Graphics.update();
         sprite->update();
-        sprite->setAngle(k);
-        sprite->setOpacity(remainder(k, 255));
-        sprite->setX(baseX + 100 * sin(k*M_PI/180.0));
-        sprite->setY(baseY + 100 * cos(k*M_PI/180.0));
+        //sprite->setAngle(k);
+        //sprite->setOpacity(remainder(k, 255));
+        //sprite->setX(baseX + 100 * sin(k*M_PI/180.0));
+        //sprite->setY(baseY + 100 * cos(k*M_PI/180.0));
 
         bool isVisible = sprite->getOpacity() <= 200;
-        sprite->setVisible(isVisible);
+        //sprite->setVisible(isVisible);
     }
 
     return 0;

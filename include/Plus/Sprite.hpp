@@ -7,6 +7,8 @@ namespace Plus {
     class Sprite : public Drawable {
         struct ShaderData {
             unsigned int program;
+            // Mirror
+            unsigned int mirroredLoc;
             // Opacity
             unsigned int opacityLoc;
             // Tone
@@ -76,7 +78,6 @@ namespace Plus {
         void flash(Plus::Color* color, unsigned int duration);
         void update();
         virtual void draw();
-
 
     private:
         long x, y;
