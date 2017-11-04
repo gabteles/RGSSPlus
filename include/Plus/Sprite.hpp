@@ -12,6 +12,8 @@ namespace Plus {
             unsigned int phaseLoc;
             unsigned int speedLoc;
             unsigned int timeLoc;
+            unsigned int texRightLoc;
+            unsigned int texLeftLoc;
         };
 
     public:
@@ -54,8 +56,8 @@ namespace Plus {
         void setWaveAmp(int waveAmp);
         int getWaveLength();
         void setWaveLength(int waveLength);
-        int getWaveSpeed();
-        void setWaveSpeed(int waveSpeed);
+        float getWaveSpeed();
+        void setWaveSpeed(float waveSpeed);
         int getWavePhase();
         void setWavePhase(int wavePhase);
         unsigned int getBushDepth();
@@ -72,7 +74,9 @@ namespace Plus {
         unsigned short angle;
         Plus::Rect* srcRect;
         bool mirror;
-        int waveAmp, waveLength, waveSpeed, wavePhase, waveTimer;
+        int waveAmp, waveLength, wavePhase;
+        double waveSpeed;
+        float waveTimer;
         Plus::Color* flashColor;
         unsigned int bushDepth, flashDuration;
         unsigned char bushOpacity;

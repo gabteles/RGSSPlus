@@ -51,11 +51,17 @@ namespace Plus {
             "uniform float waveLength;"
             "uniform float wavePhase;"
             "uniform float waveSpeed;"
+            "uniform float texLeft;"
+            "uniform float texRight;"
             "uniform sampler2D tex;"
             "void main(void) {"
             "  vec2 p = gl_TexCoord[0].xy;"
             "  p.x = p.x - sin(wavePhase + waveSpeed * time + p.y * 2.0 * PI / waveLength) * waveAmp;"
-            "  gl_FragColor = texture2D(tex, p);"
+            "  if (p.x >= texLeft && p.x <= texRight) {"
+            "    gl_FragColor = texture2D(tex, p);"
+            "  } else { "
+            "    gl_FragColor = vec4(0, 0, 0, 0);"
+            "  }"
             "}";
 
         unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -87,6 +93,8 @@ namespace Plus {
         data->phaseLoc = glGetUniformLocation(program, "wavePhase");
         data->speedLoc = glGetUniformLocation(program, "waveSpeed");
         data->timeLoc = glGetUniformLocation(program, "time");
+        data->texRightLoc = glGetUniformLocation(program, "texRight");
+        data->texLeftLoc = glGetUniformLocation(program, "texLeft");
         data->program = program;
 
         Sprite::waveShaderData = data;
@@ -246,19 +254,19 @@ namespace Plus {
      * Get wave speed of the sprite's renderization.
      * Effect will only update with calling sprite's update method.
      *
-     * @return int Wave Speed
+     * @return float Wave Speed
      */
-    int Sprite::getWaveSpeed(){
+    float Sprite::getWaveSpeed(){
         return this->waveSpeed;
     }
 
     /*
      * Set wave speed
      *
-     * @param int New speed
+     * @param float New speed
      * @return void
      */
-    void Sprite::setWaveSpeed(int waveSpeed){
+    void Sprite::setWaveSpeed(float waveSpeed){
         this->waveSpeed = waveSpeed;
     }
 
@@ -343,7 +351,7 @@ namespace Plus {
         if (this->flashDuration > 0)
             this->flashDuration--;
 
-        this->waveTimer = remainder(this->waveTimer + 1, 360);
+        this->waveTimer = remainder(this->waveTimer + 1, 180);
     }
 
     /*
@@ -364,6 +372,10 @@ namespace Plus {
 
         float vertexW = MIN(bitmapWidth, srcRectW);
         float vertexH = MIN(bitmapHeight, srcRectH);
+
+        if (vertexW <= 0 || vertexH <= 0) {
+            return;
+        }
 
         float heightAdjust = (srcRectH < bitmapHeight ? bitmapHeight - srcRectH : 0);
 
@@ -397,6 +409,8 @@ namespace Plus {
         glUniform1f(data->phaseLoc, M_PI * this->wavePhase/180.0);
         glUniform1f(data->speedLoc, this->waveSpeed);
         glUniform1f(data->timeLoc, this->waveTimer);
+        glUniform1f(data->texRightLoc, texRight);
+        glUniform1f(data->texLeftLoc, texLeft);
 
         glVertexPointer(2, GL_FLOAT, 0, vertices);
         glTexCoordPointer(2, GL_FLOAT, 0, texCoords);

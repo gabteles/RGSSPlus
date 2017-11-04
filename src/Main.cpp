@@ -24,7 +24,7 @@ int main(){
     sprite->setOy(sprite->getHeight() / 2);
 
     Plus::Rect *srcRect = new Plus::Rect(0, 0, 150, 600);
-    //sprite->setSrcRect(srcRect);
+    sprite->setSrcRect(srcRect);
 
     sprite->setWaveAmp(5);
     sprite->setWaveSpeed(1);
