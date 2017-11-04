@@ -1,5 +1,28 @@
 #include <Plus.hpp>
 
+void print_log(GLuint object)
+{
+  GLint log_length = 0;
+  if (glIsShader(object))
+    glGetShaderiv(object, GL_INFO_LOG_LENGTH, &log_length);
+  else if (glIsProgram(object))
+    glGetProgramiv(object, GL_INFO_LOG_LENGTH, &log_length);
+  else {
+    fprintf(stderr, "printlog: Não é um shader ou programa\n");
+    return;
+  }
+
+  char* log = (char*)malloc(log_length);
+
+  if (glIsShader(object))
+    glGetShaderInfoLog(object, log_length, NULL, log);
+  else if (glIsProgram(object))
+    glGetProgramInfoLog(object, log_length, NULL, log);
+
+  fprintf(stderr, "%s", log);
+  free(log);
+}
+
 namespace Plus {
     // Static variables initialization
     Sprite::WaveShaderData* Sprite::waveShaderData = NULL;
@@ -13,6 +36,7 @@ namespace Plus {
         if (Sprite::waveShaderData != NULL) {
             return Sprite::waveShaderData;
         }
+
 
         const char* vertexShaderSource =
             "uniform float pixelWaveAmp;"
@@ -57,6 +81,16 @@ namespace Plus {
         glAttachShader(program, vertexShader);
         glAttachShader(program, fragmentShader);
         glLinkProgram(program);
+
+        int link_ok;
+        glGetProgramiv(program, GL_LINK_STATUS, &link_ok);
+
+        if (!link_ok) {
+            print_log(vertexShader);
+            print_log(fragmentShader);
+            print_log(program);
+            return 0;
+        }
 
         Sprite::WaveShaderData* data = new Sprite::WaveShaderData;
 
