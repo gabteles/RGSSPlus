@@ -163,7 +163,7 @@ namespace Plus {
      * @param bool New state (true = visible // false = hidden)
      * @return void
      */
-    void Drawable::setVibible(bool visible){
+    void Drawable::setVisible(bool visible){
         this->visible = visible;
     }
 

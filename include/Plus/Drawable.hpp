@@ -20,7 +20,7 @@ namespace Plus {
         int getZ();
         void setZ(long z);
         bool getVisible();
-        void setVibible(bool visible);
+        void setVisible(bool visible);
         double getZoomX();
         void setZoomX(double zoomX);
         double getZoomY();

@@ -45,6 +45,9 @@ int main(){
         sprite->setOpacity(remainder(k, 255));
         sprite->setX(baseX + 100 * sin(k*M_PI/180.0));
         sprite->setY(baseY + 100 * cos(k*M_PI/180.0));
+
+        bool isVisible = sprite->getOpacity() <= 200;
+        sprite->setVisible(isVisible);
     }
 
     return 0;

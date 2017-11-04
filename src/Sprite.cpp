@@ -27,7 +27,6 @@ void print_log(GLuint object)
 // - Flash
 // - Bush
 // - Viewport
-// - Visibility
 // - Blend Type
 // - Viewport
 
@@ -393,7 +392,7 @@ namespace Plus {
      * @return void
      */
     void Sprite::draw() {
-        if (!this->bitmap || this->_disposed) {
+        if (!this->bitmap || this->_disposed || !this->visible || this->opacity == 0) {
             return;
         }
 
