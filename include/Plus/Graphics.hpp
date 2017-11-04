@@ -35,7 +35,7 @@ namespace Plus {
             unsigned int realFrameRate;
             unsigned int realFrameRateBuffer;
             double microsecByFrame;
-            stack<Drawable*>* objects;
+            forward_list<Drawable*>* objects;
     };
 };
 

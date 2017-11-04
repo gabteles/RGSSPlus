@@ -39,7 +39,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
-#include <stack>
+#include <forward_list>
 #include <cmath>
 
 /* Library Includes */
@@ -54,7 +54,7 @@
 namespace Plus {
     using std::string;
     using std::stringstream;
-    using std::stack;
+    using std::forward_list;
 
     class Bitmap;
     class Color;

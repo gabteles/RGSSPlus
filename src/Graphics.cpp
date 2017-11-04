@@ -21,7 +21,7 @@ namespace Plus {
         this->brightness = 255;
         this->frameRate  = 60;
         this->microsecByFrame = 1000000/60.f;
-        this->objects = new stack<Drawable*>();
+        this->objects = new forward_list<Drawable*>();
 
 
         // Fake argc and argv, because we don't want conflicts or
@@ -174,7 +174,7 @@ namespace Plus {
      * @return void
      */
     void _MGraphics::addObject(Drawable* object){
-        this->objects->push(object);
+        this->objects->push_front(object);
     }
 
     /*
@@ -184,15 +184,7 @@ namespace Plus {
      * @return void
      */
     void _MGraphics::removeObject(Drawable* object){
-        Drawable* aObj;
-        for (register unsigned int i = 0; i < this->objects->size(); i++) {
-                aObj = this->objects->top();
-                this->objects->pop();
-
-                if (aObj == object) return;
-
-                this->objects->push(aObj);
-        }
+        this->objects->remove(object);
     }
 
     /*
@@ -208,14 +200,9 @@ namespace Plus {
             this->realFrameRateBuffer++;
             glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-            Drawable* aObj;
-            for (register unsigned int i = 0; i < this->objects->size(); i++) {
+            for (Drawable* obj : *this->objects) {
                 glLoadIdentity(); // Reset matrix for each Drawable
-
-                aObj = this->objects->top();
-                this->objects->pop();
-                aObj->draw();
-                this->objects->push(aObj);
+                obj->draw();
             }
 
             glutSwapBuffers();
