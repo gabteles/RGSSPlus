@@ -31,7 +31,7 @@ int main(){
     sprite->setWavePhase(90);
     sprite->setWaveAmp(5);
 
-    sprite->setColor(new Plus::Color(255, 0, 0, 0));
+    sprite->setColor(new Plus::Color(0, 0, 255, 100));
     sprite->setTone(new Plus::Tone(255, 0, 0, 200));
 
     while (true) {

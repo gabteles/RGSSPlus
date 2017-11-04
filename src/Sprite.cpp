@@ -24,8 +24,6 @@ void print_log(GLuint object)
 }
 
 // TODO:
-// - Tone
-// - Color
 // - Flash
 // - Bush
 // - Viewport
