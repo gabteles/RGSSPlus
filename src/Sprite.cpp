@@ -27,8 +27,6 @@ void print_log(GLuint object)
 // - Flash
 // - Bush
 // - Viewport
-// - Blend Type
-// - Viewport
 
 namespace Plus {
     // Static variables initialization
