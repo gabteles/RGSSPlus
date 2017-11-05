@@ -144,7 +144,7 @@ namespace Plus {
         Drawable::setBitmap(bitmap);
 
         if (this->bitmap && !this->srcRect) {
-            this->srcRect = new Plus::Rect(0, 0, this->getWidth(), this->getHeight());
+            this->srcRect = new Plus::Rect(0, 0, this->bitmap->getWidth(), this->bitmap->getHeight());
         }
     }
 
@@ -376,6 +376,24 @@ namespace Plus {
     }
 
     /*
+     * Get sprite's srcRect's width
+     *
+     * @return unsigned long Width
+     */
+    unsigned long Sprite::getWidth(){
+        return (this->srcRect ? this->srcRect->getWidth() : 0);
+    }
+
+    /*
+     * Get sprite's srcRect's height
+     *
+     * @return unsigned long Height
+     */
+    unsigned long Sprite::getHeight(){
+        return (this->srcRect ? this->srcRect->getHeight() : 0);
+    }
+
+    /*
      * Updates the sprite's animations. It's not necessary to call if flash
      * or wave aren't in progress.
      */
@@ -409,8 +427,6 @@ namespace Plus {
         if (vertexW <= 0 || vertexH <= 0) {
             return;
         }
-
-        float heightAdjust = (srcRectH < bitmapHeight ? bitmapHeight - srcRectH : 0);
 
         float texLeft = this->srcRect->getX() / bitmapWidth;
         float texTop = this->srcRect->getY() / bitmapHeight;
@@ -489,9 +505,9 @@ namespace Plus {
 
         glVertexPointer(2, GL_FLOAT, 0, vertices);
         glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
-        glTranslatef(this->x, Plus::Graphics.getHeight() - this->y, 0);
+        glTranslatef(this->x, Plus::Graphics.getHeight() - (this->y + vertexH), 0);
         glRotatef(this->angle, 0.f, 0.f, 1.f);
-        glTranslatef(-this->ox * this->zoomX, -(this->oy - heightAdjust) * this->zoomY, 0);
+        glTranslatef(-this->ox * this->zoomX, this->oy * this->zoomY, 0);
         glDrawArrays(GL_QUADS, 0, 4);
         glDisableClientState(GL_TEXTURE_COORD_ARRAY_EXT);
         glDisableClientState(GL_VERTEX_ARRAY);

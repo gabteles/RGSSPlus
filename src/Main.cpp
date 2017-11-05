@@ -11,8 +11,6 @@ int main(){
     Plus::Config.initialize();
     Plus::Graphics.initialize(544, 416);
 
-
-
     Plus::Sprite *sprite = new Plus::Sprite();
     sprite->setBitmap(new Plus::Bitmap("img-thing.jpg"));
     double k = 0.1;
@@ -20,13 +18,13 @@ int main(){
     float baseX = Plus::Graphics.getWidth() / 2;
     float baseY = Plus::Graphics.getHeight() / 2;
 
-    sprite->setX(baseX);
+    sprite->setX(baseX + sprite->getWidth() / 2);
     sprite->setY(baseY);
     sprite->setOx(sprite->getWidth() / 2);
     sprite->setOy(sprite->getHeight() / 2);
 
-    Plus::Rect *srcRect = new Plus::Rect(0, 0, 150, 300);
-    //sprite->setSrcRect(srcRect);
+    Plus::Rect *srcRect = new Plus::Rect(0, 0, 150, 150);
+    sprite->setSrcRect(srcRect);
 
     sprite->setWaveSpeed(5);
     sprite->setWaveLength(75);
@@ -44,8 +42,8 @@ int main(){
     sprite2->setBitmap(new Plus::Bitmap("img-thing.jpg"));
     sprite2->setX(baseX);
     sprite2->setY(baseY);
-    sprite2->setOx(sprite->getWidth() / 2);
-    sprite2->setOy(sprite->getHeight() / 2);
+    sprite2->setOx(sprite2->getWidth() / 2);
+    sprite2->setOy(sprite2->getHeight() / 2);
 
     while (true) {
         k += 1;

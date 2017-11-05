@@ -299,7 +299,7 @@ namespace Plus {
     }
 
     /*
-     * Get drawable's bitmap width
+     * Get drawable's bitmap's width
      *
      * @return unsigned long Width
      */
@@ -308,7 +308,7 @@ namespace Plus {
     }
 
     /*
-     * Get drawable's bitmap height
+     * Get drawable's bitmap's height
      *
      * @return unsigned long Height
      */
