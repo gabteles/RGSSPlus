@@ -208,19 +208,19 @@ namespace Plus {
     /*
      * Get angle in degrees
      *
-     * @return unsigned short Angle
+     * @return float Angle
      */
-    unsigned short Sprite::getAngle(){
+    float Sprite::getAngle(){
         return this->angle;
     }
 
     /*
      * Set angle value
      *
-     * @param unsigned short New angle
+     * @param float New angle
      * @return void
      */
-    void Sprite::setAngle(unsigned short angle){
+    void Sprite::setAngle(float angle){
         this->angle = angle;
     }
 
@@ -448,6 +448,21 @@ namespace Plus {
             texLeft = tmpTexCoord;
         }
 
+
+        switch (this->blendType) {
+            case 0:
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                glBlendEquation(GL_FUNC_ADD);
+                break;
+            case 1:
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+                glBlendEquation(GL_FUNC_ADD);
+                break;
+            case 2:
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+                glBlendEquation(GL_FUNC_SUBTRACT);
+                break;
+        }
 
         glEnableClientState(GL_VERTEX_ARRAY);
         glEnableClientState(GL_TEXTURE_COORD_ARRAY_EXT);

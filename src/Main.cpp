@@ -11,6 +11,8 @@ int main(){
     Plus::Config.initialize();
     Plus::Graphics.initialize(544, 416);
 
+
+
     Plus::Sprite *sprite = new Plus::Sprite();
     sprite->setBitmap(new Plus::Bitmap("img-thing.jpg"));
     double k = 0.1;
@@ -24,27 +26,35 @@ int main(){
     sprite->setOy(sprite->getHeight() / 2);
 
     Plus::Rect *srcRect = new Plus::Rect(0, 0, 150, 300);
-    sprite->setSrcRect(srcRect);
+    //sprite->setSrcRect(srcRect);
 
     sprite->setWaveSpeed(5);
     sprite->setWaveLength(75);
     sprite->setWavePhase(90);
     sprite->setWaveAmp(5);
 
-    sprite->setColor(new Plus::Color(0, 0, 255, 100));
-    sprite->setTone(new Plus::Tone(255, 0, 0, 200));
-
-    sprite->setZoomX(1.25);
-    sprite->setZoomY(1.25);
+    sprite->setColor(new Plus::Color(127, 0, 0, 100));
+    sprite->setTone(new Plus::Tone(0, 0, 0, 0));
 
     sprite->setMirror(true);
+
+    sprite->setBlendType(1);
+
+    Plus::Sprite *sprite2 = new Plus::Sprite();
+    sprite2->setBitmap(new Plus::Bitmap("img-thing.jpg"));
+    sprite2->setX(baseX);
+    sprite2->setY(baseY);
+    sprite2->setOx(sprite->getWidth() / 2);
+    sprite2->setOy(sprite->getHeight() / 2);
 
     while (true) {
         k += 1;
         Plus::Graphics.update();
         sprite->update();
-        //sprite->setAngle(k);
-        //sprite->setOpacity(remainder(k, 255));
+        sprite->setAngle(2.5 * sin(4*k*M_PI/180.0));
+        sprite->setOpacity(255 * abs(sin(k*M_PI/180.0)));
+        sprite->setZoomX(1 + 0.03 * sin(k*M_PI/180.0));
+        sprite->setZoomY(1 + 0.03 * sin(k*M_PI/180.0));
         //sprite->setX(baseX + 100 * sin(k*M_PI/180.0));
         //sprite->setY(baseY + 100 * cos(k*M_PI/180.0));
 

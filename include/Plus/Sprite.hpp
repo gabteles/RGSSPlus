@@ -59,8 +59,8 @@ namespace Plus {
         void setY(long y);
         Plus::Rect* getSrcRect();
         void setSrcRect(Plus::Rect* rect);
-        unsigned short getAngle();
-        void setAngle(unsigned short angle);
+        float getAngle();
+        void setAngle(float angle);
         bool getMirror();
         void setMirror(bool mirror);
         float getWaveAmp();
@@ -81,7 +81,7 @@ namespace Plus {
 
     private:
         long x, y;
-        unsigned short angle;
+        float angle;
         Plus::Rect* srcRect;
         bool mirror;
         float waveAmp, waveLength, wavePhase, waveSpeed, waveTimer;
