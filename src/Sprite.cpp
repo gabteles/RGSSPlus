@@ -42,49 +42,74 @@ namespace Plus {
             return Sprite::shaderData;
         }
 
-        const char* vertexShaderSource =
-            "uniform float pixelWaveAmp;"
-            "uniform float waveAmp;"
-            "uniform float vertCenterX;"
-            "uniform int mirrored;"
-            "void main(void) {"
-            "  float modifier = (gl_Vertex.x < vertCenterX ? -0.5 : 0.5);"
-            "  vec4 vertMod = vec4(pixelWaveAmp, 0, 0, 0) * modifier;"
-            "  vec4 texMod = vec4(waveAmp, 0, 0, 0) * modifier * (mirrored == 1 ? -1.0 : 1.0);"
-            "  gl_Position = gl_ModelViewProjectionMatrix * (gl_Vertex + vertMod);"
-            "  gl_TexCoord[0] = gl_MultiTexCoord0 + texMod;"
-            "}";
+        const char* vertexShaderSource = R"EOS(
+            uniform float pixelWaveAmp;
+            uniform float waveAmp;
+            uniform float vertCenterX;
+            uniform int mirrored;
 
-        const char* fragmentShaderSource =
-            "#define PI 3.141592\n"
-            "uniform float time;"
-            "uniform float waveAmp;"
-            "uniform float waveLength;"
-            "uniform float wavePhase;"
-            "uniform float waveSpeed;"
-            "uniform float texLeft;"
-            "uniform float texRight;"
-            "uniform vec4 tone;"
-            "uniform vec4 color;"
-            "uniform float opacity;"
-            "uniform sampler2D tex;"
-            "void main(void) {"
-            "  vec2 p = gl_TexCoord[0].xy;"
-            "  p.x += sin(wavePhase + waveSpeed * time + p.y * 2.0 * PI / waveLength) * waveAmp/2.0;"
-            "  if (p.x >= texLeft && p.x <= texRight) {"
-            "    vec4 baseFrag = texture2D(tex, p);"
-            "    vec4 normColor = color/255.0;"
-            "    vec4 normTone = tone/255.0;"
-            "    vec4 colorFrag = normColor + baseFrag * (1.0 - normColor.w);"
-            "    vec4 toneFrag = (colorFrag + vec4(normTone.xyz, 1.0));"
-            "    float luminance = 0.21 * toneFrag.x + 0.72 * toneFrag.y + 0.07 * toneFrag.z;"
-            "    vec4 luminanceFrag = vec4(luminance, luminance, luminance, 1.0);"
-            "    vec4 grayFrag = luminanceFrag * normTone.w + toneFrag * (1.0 - normTone.w);"
-            "    gl_FragColor = grayFrag * vec4(1.0, 1.0, 1.0, opacity/255.0);"
-            "  } else { "
-            "    gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);"
-            "  }"
-            "}";
+            void main(void) {
+              float sideModifier = (gl_Vertex.x < vertCenterX ? -0.5 : 0.5);
+              float mirrorModifier = (mirrored == 1 ? -1.0 : 1.0);
+
+              vec4 vertMod = vec4(pixelWaveAmp, 0, 0, 0) * sideModifier;
+              vec4 texMod = vec4(waveAmp, 0, 0, 0) * sideModifier * mirrorModifier;
+
+              gl_Position = gl_ModelViewProjectionMatrix * (gl_Vertex + vertMod);
+              gl_TexCoord[0] = gl_MultiTexCoord0 + texMod;
+            }
+        )EOS";
+
+        const char* fragmentShaderSource = R"EOS(
+            #define PI 3.14159265359
+
+            uniform float time;
+            uniform float waveAmp;
+            uniform float waveLength;
+            uniform float wavePhase;
+            uniform float waveSpeed;
+            uniform float texLeft;
+            uniform float texRight;
+            uniform vec4 tone;
+            uniform vec4 color;
+            uniform float opacity;
+            uniform sampler2D tex;
+
+            const vec3 luminanceFactors = vec3(0.21, 0.72, 0.07);
+
+            void main(void) {
+                vec2 p = gl_TexCoord[0].xy;
+                p.x += sin(wavePhase + waveSpeed * time + p.y * 2.0 * PI / waveLength) * waveAmp/2.0;
+
+                // Pixel is off the wave boundaries
+                if (p.x < texLeft || p.x > texRight) {
+                    gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
+                    return;
+                }
+
+                vec4 normColor = color/255.0;
+                vec4 normTone = tone/255.0;
+
+                // Base Fragment color
+                vec4 frag = texture2D(tex, p);
+
+                // Apply Gray
+                float luminance = dot(normTone.rgb, luminanceFactors);
+                frag.rgb = mix(frag.rgb, vec3(luminance), normTone.w);
+
+                // Apply Tone
+                frag.rgb += normTone.rgb;
+
+                // Apply opacity
+                frag.a *= opacity;
+
+                // Apply Color
+                frag.rgb = mix(frag.rgb, color.rgb, color.a);
+
+                gl_FragColor = frag;
+            }
+
+        )EOS";
 
         unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
         unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -487,7 +512,7 @@ namespace Plus {
         glUseProgram(data->program);
 
         glUniform1i(data->mirroredLoc, this->mirror);
-        glUniform1f(data->opacityLoc, this->opacity);
+        glUniform1f(data->opacityLoc, this->opacity/255.0);
         glUniform1f(data->pixelAmplitudeLoc, this->waveAmp);
         glUniform1f(data->amplitudeLoc, (this->waveAmp / vertexW));
         glUniform1f(data->lengthLoc, (this->waveLength / vertexH));
