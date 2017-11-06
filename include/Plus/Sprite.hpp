@@ -16,15 +16,9 @@ namespace Plus {
             // Color
             unsigned int colorLoc;
             // Wave
-            unsigned int pixelAmplitudeLoc;
-            unsigned int amplitudeLoc;
-            unsigned int lengthLoc;
-            unsigned int phaseLoc;
-            unsigned int speedLoc;
+            unsigned int waveLoc;
             unsigned int timeLoc;
-            unsigned int texRightLoc;
-            unsigned int texLeftLoc;
-            unsigned int vertCenterXLoc;
+            unsigned int coordsLoc;
         };
 
     public:
@@ -35,7 +29,7 @@ namespace Plus {
             this->srcRect       = NULL;
             this->mirror        = false;
             this->waveAmp       = 0;
-            this->waveLength    = 1;
+            this->waveLength    = 0;
             this->waveSpeed     = 0;
             this->wavePhase     = 0;
             this->waveTimer     = 0;

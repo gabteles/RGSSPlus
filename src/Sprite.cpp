@@ -43,17 +43,16 @@ namespace Plus {
         }
 
         const char* vertexShaderSource = R"EOS(
-            uniform float pixelWaveAmp;
-            uniform float waveAmp;
-            uniform float vertCenterX;
+            uniform vec4 wave;
+            uniform vec4 coords;
             uniform int mirrored;
 
             void main(void) {
-              float sideModifier = (gl_Vertex.x < vertCenterX ? -0.5 : 0.5);
+              float sideModifier = (gl_Vertex.x < coords.w ? -0.5 : 0.5);
               float mirrorModifier = (mirrored == 1 ? -1.0 : 1.0);
 
-              vec4 vertMod = vec4(pixelWaveAmp, 0, 0, 0) * sideModifier;
-              vec4 texMod = vec4(waveAmp, 0, 0, 0) * sideModifier * mirrorModifier;
+              vec4 vertMod = vec4(coords.x, 0, 0, 0) * sideModifier;
+              vec4 texMod = vec4(wave.x, 0, 0, 0) * sideModifier * mirrorModifier;
 
               gl_Position = gl_ModelViewProjectionMatrix * (gl_Vertex + vertMod);
               gl_TexCoord[0] = gl_MultiTexCoord0 + texMod;
@@ -64,12 +63,8 @@ namespace Plus {
             #define PI 3.14159265359
 
             uniform float time;
-            uniform float waveAmp;
-            uniform float waveLength;
-            uniform float wavePhase;
-            uniform float waveSpeed;
-            uniform float texLeft;
-            uniform float texRight;
+            uniform vec4 wave;
+            uniform vec4 coords;
             uniform vec4 tone;
             uniform vec4 color;
             uniform float opacity;
@@ -79,10 +74,12 @@ namespace Plus {
 
             void main(void) {
                 vec2 p = gl_TexCoord[0].xy;
-                p.x += sin(wavePhase + waveSpeed * time + p.y * 2.0 * PI / waveLength) * waveAmp/2.0;
+
+                if (wave.y != 0.0)
+                    p.x += sin(wave.z + wave.w * time + p.y * 2.0 * PI / wave.y) * wave.x/2.0;
 
                 // Pixel is off the wave boundaries
-                if (p.x < texLeft || p.x > texRight) {
+                if (p.x < coords.z || p.x > coords.y) {
                     gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
                     return;
                 }
@@ -137,19 +134,11 @@ namespace Plus {
 
         data->mirroredLoc = glGetUniformLocation(program, "mirrored");
         data->opacityLoc = glGetUniformLocation(program, "opacity");
-
         data->toneLoc = glGetUniformLocation(program, "tone");
         data->colorLoc = glGetUniformLocation(program, "color");
-
-        data->pixelAmplitudeLoc = glGetUniformLocation(program, "pixelWaveAmp");
-        data->amplitudeLoc = glGetUniformLocation(program, "waveAmp");
-        data->lengthLoc = glGetUniformLocation(program, "waveLength");
-        data->phaseLoc = glGetUniformLocation(program, "wavePhase");
-        data->speedLoc = glGetUniformLocation(program, "waveSpeed");
+        data->coordsLoc = glGetUniformLocation(program, "coords");
+        data->waveLoc = glGetUniformLocation(program, "wave");
         data->timeLoc = glGetUniformLocation(program, "time");
-        data->texRightLoc = glGetUniformLocation(program, "texRight");
-        data->texLeftLoc = glGetUniformLocation(program, "texLeft");
-        data->vertCenterXLoc = glGetUniformLocation(program, "vertCenterX");
 
         data->program = program;
 
@@ -511,18 +500,25 @@ namespace Plus {
 
         glUseProgram(data->program);
 
+        float waveData[] = {
+            this->waveAmp / vertexW,
+            this->waveLength / vertexH,
+            this->wavePhase * ((float)(M_PI/180.0)),
+            this->waveSpeed
+        };
+
+        float coordsData[] = {
+            this->waveAmp,
+            texRight,
+            texLeft,
+            vertexW/2
+        };
+
         glUniform1i(data->mirroredLoc, this->mirror);
         glUniform1f(data->opacityLoc, this->opacity/255.0);
-        glUniform1f(data->pixelAmplitudeLoc, this->waveAmp);
-        glUniform1f(data->amplitudeLoc, (this->waveAmp / vertexW));
-        glUniform1f(data->lengthLoc, (this->waveLength / vertexH));
-        glUniform1f(data->phaseLoc, M_PI * this->wavePhase/180.0);
-        glUniform1f(data->speedLoc, this->waveSpeed);
         glUniform1f(data->timeLoc, this->waveTimer);
-        glUniform1f(data->texRightLoc, texRight);
-        glUniform1f(data->texLeftLoc, texLeft);
-        glUniform1f(data->vertCenterXLoc, vertexW/2);
-
+        glUniform4fv(data->coordsLoc, 1, coordsData);
+        glUniform4fv(data->waveLoc, 1, waveData);
         glUniform4fv(data->toneLoc, 1, this->tone->dump());
         glUniform4fv(data->colorLoc, 1, this->color->dump());
 
