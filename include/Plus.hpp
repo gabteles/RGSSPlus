@@ -59,6 +59,7 @@ namespace Plus {
     class Bitmap;
     class Color;
     class Drawable;
+    class FlashControl;
     class Font;
     class Plane;
     class RGSSError;
@@ -89,6 +90,7 @@ namespace Plus {
 #include <Plus/Table.hpp>
 #include <Plus/Color.hpp>
 #include <Plus/Tone.hpp>
+#include <Plus/FlashControl.hpp>
 #include <Plus/Font.hpp>
 #include <Plus/Rect.hpp>
 #include <Plus/Bitmap.hpp>

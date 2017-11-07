@@ -24,7 +24,6 @@ void print_log(GLuint object)
 }
 
 // TODO:
-// - Flash
 // - Viewport
 
 namespace Plus {
@@ -101,7 +100,7 @@ namespace Plus {
                 frag.a *= opacity;
 
                 // Apply Color
-                frag.rgb = mix(frag.rgb, color.rgb, color.a);
+                frag.rgb = mix(frag.rgb, normColor.rgb, normColor.a);
 
                 // Apply bush
                 if (p.y > bush.y) {
@@ -388,9 +387,8 @@ namespace Plus {
      * @param Plus::Color Flash color. If null, Color(0, 0, 0, 0) will be used
      * @param unsigned int Number of frames flashing will last.
      */
-    void Sprite::flash(Plus::Color* color, unsigned int duration) {
-        this->flashColor    = color;
-        this->flashDuration = duration;
+    void Sprite::flash(const Plus::Color* color, unsigned int duration) {
+        this->flashControl->start(color, duration);
     }
 
     /*
@@ -416,10 +414,7 @@ namespace Plus {
      * or wave aren't in progress.
      */
     void Sprite::update() {
-        // Update flash
-        if (this->flashDuration > 0)
-            this->flashDuration--;
-
+        this->flashControl->update();
         this->waveTimer = remainder(this->waveTimer + (1.0/Plus::Graphics.getFrameRate()), 180);
     }
 
@@ -532,7 +527,14 @@ namespace Plus {
         glUniform4fv(data->coordsLoc, 1, coordsData);
         glUniform4fv(data->waveLoc, 1, waveData);
         glUniform4fv(data->toneLoc, 1, this->tone->dump());
-        glUniform4fv(data->colorLoc, 1, this->color->dump());
+
+        Plus::Color flashColor = this->flashControl->getColor();
+
+        if (this->flashControl->isFlashing() && flashColor.getAlpha() > this->color->getAlpha()) {
+            glUniform4fv(data->colorLoc, 1, flashColor.dump());
+        } else {
+            glUniform4fv(data->colorLoc, 1, this->color->dump());
+        }
 
         glVertexPointer(2, GL_FLOAT, 0, vertices);
         glTexCoordPointer(2, GL_FLOAT, 0, texCoords);

@@ -35,10 +35,9 @@ namespace Plus {
             this->waveSpeed     = 0;
             this->wavePhase     = 0;
             this->waveTimer     = 0;
-            this->flashColor    = new Plus::Color();
-            this->flashDuration = 0;
             this->bushDepth     = 0;
             this->bushOpacity   = 128;
+            this->flashControl  = new Plus::FlashControl();
         };
 
         Sprite(Plus::Viewport* viewport) : Drawable::Drawable(viewport) {
@@ -71,7 +70,7 @@ namespace Plus {
         void setBushDepth(unsigned int bushDepth);
         unsigned char getBushOpacity();
         void setBushOpacity(unsigned char bushOpacity);
-        void flash(Plus::Color* color, unsigned int duration);
+        void flash(const Plus::Color* color, unsigned int duration);
         unsigned long getWidth();
         unsigned long getHeight();
         void update();
@@ -83,9 +82,9 @@ namespace Plus {
         Plus::Rect* srcRect;
         bool mirror;
         float waveAmp, waveLength, wavePhase, waveSpeed, waveTimer;
-        Plus::Color* flashColor;
-        unsigned int bushDepth, flashDuration;
+        unsigned int bushDepth;
         unsigned char bushOpacity;
+        Plus::FlashControl* flashControl;
     };
 };
 

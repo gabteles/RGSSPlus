@@ -47,10 +47,13 @@ int main(){
     sprite2->setBushDepth(40);
     sprite2->setBushOpacity(120);
 
+    sprite2->flash(new Plus::Color(255, 0, 0), 30);
+
     while (true) {
         k += 1;
         Plus::Graphics.update();
         sprite->update();
+        sprite2->update();
         sprite->setAngle(2.5 * sin(4*k*M_PI/180.0));
         sprite->setOpacity(255 * abs(sin(k*M_PI/180.0)));
         sprite->setZoomX(1 + 0.03 * sin(k*M_PI/180.0));
