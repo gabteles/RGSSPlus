@@ -25,7 +25,6 @@ void print_log(GLuint object)
 
 // TODO:
 // - Flash
-// - Bush
 // - Viewport
 
 namespace Plus {
@@ -68,6 +67,7 @@ namespace Plus {
             uniform vec4 tone;
             uniform vec4 color;
             uniform float opacity;
+            uniform vec3 bush;
             uniform sampler2D tex;
 
             const vec3 luminanceFactors = vec3(0.21, 0.72, 0.07);
@@ -102,6 +102,11 @@ namespace Plus {
 
                 // Apply Color
                 frag.rgb = mix(frag.rgb, color.rgb, color.a);
+
+                // Apply bush
+                if (p.y > bush.y) {
+                    frag.a *= bush.x;
+                }
 
                 gl_FragColor = frag;
             }
@@ -139,6 +144,7 @@ namespace Plus {
         data->coordsLoc = glGetUniformLocation(program, "coords");
         data->waveLoc = glGetUniformLocation(program, "wave");
         data->timeLoc = glGetUniformLocation(program, "time");
+        data->bushLoc = glGetUniformLocation(program, "bush");
 
         data->program = program;
 
@@ -514,9 +520,15 @@ namespace Plus {
             vertexW/2
         };
 
+        float bushData[] = {
+            this->bushOpacity/255.0f,
+            texBottom - this->bushDepth/vertexH
+        };
+
         glUniform1i(data->mirroredLoc, this->mirror);
         glUniform1f(data->opacityLoc, this->opacity/255.0);
         glUniform1f(data->timeLoc, this->waveTimer);
+        glUniform3fv(data->bushLoc, 1, bushData);
         glUniform4fv(data->coordsLoc, 1, coordsData);
         glUniform4fv(data->waveLoc, 1, waveData);
         glUniform4fv(data->toneLoc, 1, this->tone->dump());

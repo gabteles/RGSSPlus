@@ -19,6 +19,8 @@ namespace Plus {
             unsigned int waveLoc;
             unsigned int timeLoc;
             unsigned int coordsLoc;
+            // Bush
+            unsigned int bushLoc;
         };
 
     public:

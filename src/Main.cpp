@@ -44,6 +44,8 @@ int main(){
     sprite2->setY(baseY);
     sprite2->setOx(sprite2->getWidth() / 2);
     sprite2->setOy(sprite2->getHeight() / 2);
+    sprite2->setBushDepth(40);
+    sprite2->setBushOpacity(120);
 
     while (true) {
         k += 1;
