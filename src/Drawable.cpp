@@ -12,14 +12,14 @@ namespace Plus {
         this->oy        = 0;
         this->visible   = true;
         this->_disposed = false;
-        this->viewport  = new Plus::Viewport();
+        this->viewport  = Plus::Viewport::getDefault();
         this->color     = new Plus::Color();
         this->tone      = new Plus::Tone();
         this->zoomX     = 1;
         this->zoomY     = 1;
         this->opacity   = 255;
 
-        Plus::Graphics.addObject(this);
+        this->viewport->addObject(this);
     }
 
     /*
@@ -41,7 +41,7 @@ namespace Plus {
         this->zoomY     = 1;
         this->opacity   = 255;
 
-        Plus::Graphics.addObject(this);
+        this->viewport->addObject(this);
     }
 
     /*
@@ -320,6 +320,6 @@ namespace Plus {
      * Destructor
      */
     Drawable::~Drawable(){
-        Plus::Graphics.removeObject(this);
+        this->viewport->removeObject(this);
     }
 }

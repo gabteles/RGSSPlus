@@ -6,6 +6,9 @@
 namespace Plus {
     class Viewport {
     public:
+        static Plus::Viewport* getDefault();
+        static Plus::Viewport* DefaultViewport;
+
         Viewport();
         Viewport(Plus::Rect* rect);
         Viewport(int x, int y, int width, int height);
@@ -27,9 +30,15 @@ namespace Plus {
         void setZ(int z);
         void setOx(int ox);
         void setOy(int oy);
+        void addObject(Drawable* object);
+        void removeObject(Drawable* object);
+        void draw();
         ~Viewport();
 
     private:
+        void createFBO();
+        void createFboAttachments();
+
         Plus::Rect* rect;
         Plus::Color* color;
         Plus::Tone* tone;
@@ -38,6 +47,11 @@ namespace Plus {
         int oy;
         bool _disposed;
         bool visible;
+        forward_list<Drawable*>* objects;
+
+        unsigned int framebuffer;
+        unsigned int renderbuffer;
+        unsigned int textureId;
     };
 };
 

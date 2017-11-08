@@ -4,9 +4,9 @@
 namespace Plus {
     class _MGraphics {
         public:
-            void initialize(unsigned int width, unsigned int height, std::string title);
+            void initialize(unsigned int width, unsigned int height, string title);
             void initialize(unsigned int width, unsigned int height);
-            void initialize(std::string title);
+            void initialize(string title);
             void initialize();
             unsigned int getWidth();
             unsigned int getHeight();
@@ -15,8 +15,8 @@ namespace Plus {
             unsigned int  getRealFrameRate();
             void setFrameRate(unsigned int frameRate);
             void setBrightness(unsigned char brightness);
-            void addObject(Drawable* object);
-            void removeObject(Drawable* object);
+            void addObject(Viewport* object);
+            void removeObject(Viewport* object);
             void update();
             void draw();
             void wait(unsigned int duration);
@@ -36,7 +36,7 @@ namespace Plus {
             unsigned int realFrameRate;
             unsigned int realFrameRateBuffer;
             double microsecByFrame;
-            forward_list<Drawable*>* objects;
+            forward_list<Viewport*>* objects;
     };
 };
 

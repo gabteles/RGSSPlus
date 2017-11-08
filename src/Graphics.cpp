@@ -21,7 +21,7 @@ namespace Plus {
         this->brightness = 255;
         this->frameRate  = 60;
         this->microsecByFrame = 1000000/60.f;
-        this->objects = new forward_list<Drawable*>();
+        this->objects = new forward_list<Viewport*>();
 
 
         // Fake argc and argv, because we don't want conflicts or
@@ -167,22 +167,22 @@ namespace Plus {
     };
 
     /*
-     * Add Drawable object to be updated with the graphics
+     * Add Viewport object to be updated with the graphics
      *
-     * @param  Drawable* Object to add
+     * @param  Viewport* Object to add
      * @return void
      */
-    void _MGraphics::addObject(Drawable* object){
+    void _MGraphics::addObject(Viewport* object){
         this->objects->push_front(object);
     }
 
     /*
-     * Remove Drawable object
+     * Remove Viewport object
      *
-     * @param  Drawable* Object to remove
+     * @param  Viewport* Object to remove
      * @return void
      */
-    void _MGraphics::removeObject(Drawable* object){
+    void _MGraphics::removeObject(Viewport* object){
         this->objects->remove(object);
     }
 
@@ -220,7 +220,7 @@ namespace Plus {
 
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-        for (Drawable* obj : *this->objects) {
+        for (Viewport* obj : *this->objects) {
             glLoadIdentity();
             obj->draw();
         }

@@ -36,7 +36,7 @@ int main(){
 
     sprite->setMirror(true);
 
-    sprite->setBlendType(1);
+    sprite->setBlendType(0);
 
     Plus::Sprite *sprite2 = new Plus::Sprite();
     sprite2->setBitmap(new Plus::Bitmap("img-thing.jpg"));
