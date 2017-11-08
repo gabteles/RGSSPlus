@@ -38,6 +38,7 @@ namespace Plus {
     private:
         void createFBO();
         void createFboAttachments();
+        void drawInnerObjects();
 
         Plus::Rect* rect;
         Plus::Color* color;

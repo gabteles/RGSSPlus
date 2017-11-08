@@ -1,5 +1,13 @@
 #include <Plus.hpp>
 
+// TODO:
+// - ox
+// - oy
+// - z
+// - Tone
+// - Color
+// - Rect/Resize
+// - Flash
 namespace Plus {
     Plus::Viewport* Viewport::DefaultViewport = NULL;
 
@@ -317,9 +325,9 @@ namespace Plus {
     }
 
     /*
-     * Draws viewport and registered drawables
+     * Draw drawables associated with this viewport into framebuffer
      */
-    void Viewport::draw() {
+    void Viewport::drawInnerObjects() {
         glBindFramebuffer(GL_FRAMEBUFFER, this->framebuffer);
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
@@ -327,28 +335,45 @@ namespace Plus {
             obj->draw();
             glLoadIdentity();
         }
+    }
 
-        int width = this->rect->getWidth();
-        int height = this->rect->getHeight();
+    /*
+     * Draws viewport and registered drawables
+     */
+    void Viewport::draw() {
+        if (!this->visible || this->_disposed) {
+            return;
+        }
+
+        this->drawInnerObjects();
+
+        float width = (float)this->rect->getWidth();
+        float height = (float)this->rect->getHeight();
+
+        float vertices[] = {
+            0, 0,
+            width, 0,
+            width, height,
+            0, height
+        };
+
+        float texCoords[] = {
+            0, 0,
+            1, 0,
+            1, 1,
+            0, 1
+        };
 
         glUseProgram(0);
-
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glBindTexture(GL_TEXTURE_2D, this->textureId);
-
-        glBegin(GL_QUADS);
-            glTexCoord2f(0.0, 0.0);
-            glVertex3f(0.0, 0.0, 0.0);
-
-            glTexCoord2f(0.0, 1.0);
-            glVertex3f(0.0, height, 0.0);
-
-            glTexCoord2f(1.0, 1.0);
-            glVertex3f(width, height, 0.0);
-
-            glTexCoord2f(1.0, 0.0);
-            glVertex3f(width, 0, 0.0);
-        glEnd();
+        glEnableClientState(GL_VERTEX_ARRAY);
+        glEnableClientState(GL_TEXTURE_COORD_ARRAY_EXT);
+        glVertexPointer(2, GL_FLOAT, 0, vertices);
+        glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
+        glDrawArrays(GL_QUADS, 0, 4);
+        glDisableClientState(GL_TEXTURE_COORD_ARRAY_EXT);
+        glDisableClientState(GL_VERTEX_ARRAY);
     }
 
     /*
