@@ -23,9 +23,6 @@ void print_log(GLuint object)
   free(log);
 }
 
-// TODO:
-// - Viewport
-
 namespace Plus {
     // Static variables initialization
     Sprite::ShaderData* Sprite::shaderData = NULL;
@@ -538,7 +535,7 @@ namespace Plus {
 
         glVertexPointer(2, GL_FLOAT, 0, vertices);
         glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
-        glTranslatef(this->x, Plus::Graphics.getHeight() - (this->y + vertexH), 0);
+        glTranslatef(this->x, this->viewport->getRect()->getHeight() - (this->y + vertexH), 0);
         glRotatef(this->angle, 0.f, 0.f, 1.f);
         glTranslatef(-this->ox * this->zoomX, this->oy * this->zoomY, 0);
         glDrawArrays(GL_QUADS, 0, 4);

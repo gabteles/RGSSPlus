@@ -41,7 +41,19 @@ namespace Plus {
         };
 
         Sprite(Plus::Viewport* viewport) : Drawable::Drawable(viewport) {
-            Sprite();
+            this->x             = 0;
+            this->y             = 0;
+            this->angle         = 0;
+            this->srcRect       = NULL;
+            this->mirror        = false;
+            this->waveAmp       = 0;
+            this->waveLength    = 0;
+            this->waveSpeed     = 0;
+            this->wavePhase     = 0;
+            this->waveTimer     = 0;
+            this->bushDepth     = 0;
+            this->bushOpacity   = 128;
+            this->flashControl  = new Plus::FlashControl();
         };
 
         static ShaderData* getShaderData();

@@ -37,17 +37,22 @@ int main(){
     sprite->setMirror(true);
 
     sprite->setBlendType(0);
+    sprite->flash(new Plus::Color(255, 0, 0), 90);
+    sprite->getViewport()->flash(new Plus::Color(255, 0, 0), 30);
 
-    Plus::Sprite *sprite2 = new Plus::Sprite();
+    Plus::Sprite *sprite2 = new Plus::Sprite(new Plus::Viewport(0, 0, 200, 200));
+    sprite2->getViewport()->setZ(2);
+    sprite2->getViewport()->setColor(new Plus::Color(0, 255, 0, 100));
     sprite2->setBitmap(new Plus::Bitmap("img-thing.jpg"));
-    sprite2->setX(baseX);
-    sprite2->setY(baseY);
+    sprite2->setX(sprite2->getViewport()->getRect()->getWidth() / 2);
+    sprite2->setY(sprite2->getViewport()->getRect()->getHeight() / 2);
     sprite2->setOx(sprite2->getWidth() / 2);
     sprite2->setOy(sprite2->getHeight() / 2);
     sprite2->setBushDepth(40);
     sprite2->setBushOpacity(120);
 
     sprite2->flash(new Plus::Color(255, 0, 0), 30);
+
 
     while (true) {
         k += 1;
@@ -63,6 +68,8 @@ int main(){
 
         bool isVisible = sprite->getOpacity() <= 200;
         //sprite->setVisible(isVisible);
+
+        sprite->getViewport()->update();
     }
 
     return 0;

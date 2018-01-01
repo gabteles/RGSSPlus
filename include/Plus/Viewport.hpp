@@ -5,16 +5,25 @@
 
 namespace Plus {
     class Viewport {
+        struct ShaderData {
+            unsigned int program;
+            unsigned int toneLoc;
+            unsigned int colorLoc;
+            unsigned int flashLoc;
+        };
+
     public:
         static Plus::Viewport* getDefault();
         static Plus::Viewport* DefaultViewport;
+        static ShaderData* getShaderData();
+        static ShaderData* shaderData;
 
         Viewport();
         Viewport(Plus::Rect* rect);
         Viewport(int x, int y, int width, int height);
         void dispose();
         bool disposed();
-        void flash(Plus::Color* color, unsigned int duration);
+        void flash(const Plus::Color* color, unsigned int duration);
         void update();
         Plus::Color* getColor();
         Plus::Tone*  getTone();
@@ -39,6 +48,7 @@ namespace Plus {
         void createFBO();
         void createFboAttachments();
         void drawInnerObjects();
+        bool shouldResizeBuffer();
 
         Plus::Rect* rect;
         Plus::Color* color;
@@ -53,6 +63,11 @@ namespace Plus {
         unsigned int framebuffer;
         unsigned int renderbuffer;
         unsigned int textureId;
+
+        int bufferWidth;
+        int bufferHeight;
+
+        Plus::FlashControl* flashControl;
     };
 };
 

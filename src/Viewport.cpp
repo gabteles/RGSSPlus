@@ -1,15 +1,111 @@
 #include <Plus.hpp>
 
-// TODO:
-// - ox
-// - oy
-// - z
-// - Tone
-// - Color
-// - Rect/Resize
-// - Flash
+void print_log2(GLuint object)
+{
+  GLint log_length = 0;
+  if (glIsShader(object))
+    glGetShaderiv(object, GL_INFO_LOG_LENGTH, &log_length);
+  else if (glIsProgram(object))
+    glGetProgramiv(object, GL_INFO_LOG_LENGTH, &log_length);
+  else {
+    fprintf(stderr, "printlog: Não é um shader ou programa\n");
+    return;
+  }
+
+  char* log = (char*)malloc(log_length);
+
+  if (glIsShader(object))
+    glGetShaderInfoLog(object, log_length, NULL, log);
+  else if (glIsProgram(object))
+    glGetProgramInfoLog(object, log_length, NULL, log);
+
+  fprintf(stderr, "%s", log);
+  free(log);
+}
+
 namespace Plus {
+    // Static variables initialization
+    Viewport::ShaderData* Viewport::shaderData = NULL;
     Plus::Viewport* Viewport::DefaultViewport = NULL;
+
+    /*
+     * Get wave shader GLSL program
+     *
+     * @retun unsigned int OpenGL program
+     */
+    Viewport::ShaderData* Viewport::getShaderData() {
+        if (Viewport::shaderData != NULL) {
+            return Viewport::shaderData;
+        }
+
+        const char* vertexShaderSource = R"EOS(
+            void main(void) {
+              gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
+              gl_TexCoord[0] = gl_MultiTexCoord0;
+            }
+        )EOS";
+
+        const char* fragmentShaderSource = R"EOS(
+            uniform vec4 tone;
+            uniform vec4 color;
+            uniform sampler2D tex;
+
+            const vec3 luminanceFactors = vec3(0.21, 0.72, 0.07);
+
+            void main(void) {
+                vec2 p = gl_TexCoord[0].xy;
+
+                vec4 normColor = color/255.0;
+                vec4 normTone = tone/255.0;
+
+                // Base Fragment color
+                vec4 frag = texture2D(tex, p);
+
+                // Apply Gray
+                float luminance = dot(normTone.rgb, luminanceFactors);
+                frag.rgb = mix(frag.rgb, vec3(luminance), normTone.w);
+
+                // Apply Tone
+                frag.rgb += normTone.rgb;
+
+                // Apply Color
+                frag.rgb = mix(frag.rgb, normColor.rgb, normColor.a);
+
+                gl_FragColor = frag;
+            }
+        )EOS";
+
+        unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
+        unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+        unsigned int program = glCreateProgram();
+
+        glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+        glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+        glCompileShader(vertexShader);
+        glCompileShader(fragmentShader);
+        glAttachShader(program, vertexShader);
+        glAttachShader(program, fragmentShader);
+        glLinkProgram(program);
+
+        int link_ok;
+        glGetProgramiv(program, GL_LINK_STATUS, &link_ok);
+
+        if (!link_ok) {
+            print_log2(vertexShader);
+            print_log2(fragmentShader);
+            print_log2(program);
+            return 0;
+        }
+
+        Viewport::ShaderData* data = new Viewport::ShaderData;
+
+        data->toneLoc  = glGetUniformLocation(program, "tone");
+        data->colorLoc = glGetUniformLocation(program, "color");
+        data->program  = program;
+
+        Viewport::shaderData = data;
+        return Viewport::shaderData;
+    }
 
     /*
      * Get's default viewport
@@ -40,6 +136,7 @@ namespace Plus {
         this->_disposed = false;
         this->visible   = true;
         this->objects = new forward_list<Drawable*>();
+        this->flashControl  = new Plus::FlashControl();
 
         this->createFBO();
         this->createFboAttachments();
@@ -63,6 +160,7 @@ namespace Plus {
         this->_disposed = false;
         this->visible   = true;
         this->objects = new forward_list<Drawable*>();
+        this->flashControl  = new Plus::FlashControl();
 
         this->createFBO();
         this->createFboAttachments();
@@ -90,6 +188,7 @@ namespace Plus {
         this->_disposed = false;
         this->visible   = true;
         this->objects = new forward_list<Drawable*>();
+        this->flashControl  = new Plus::FlashControl();
 
         this->createFBO();
         this->createFboAttachments();
@@ -110,6 +209,24 @@ namespace Plus {
     void Viewport::createFboAttachments() {
         int width = this->rect->getWidth();
         int height = this->rect->getHeight();
+
+        this->bufferWidth = width;
+        this->bufferHeight = height;
+
+        // Free texture
+        if (this->textureId) {
+            glDeleteTextures(1, &this->textureId);
+        }
+
+        // Free renderbuffer
+        if (this->renderbuffer) {
+            glDeleteRenderbuffers(1, &this->renderbuffer);
+        }
+
+        // No need to create if this dimensions
+        if ((width <= 0) || (height <= 0)) {
+            return;
+        }
 
         // Generate texture
         glGenTextures(1, &this->textureId);
@@ -159,8 +276,8 @@ namespace Plus {
      * @param Plus::Color Color
      * @param uint Number of frames the flash will last
      */
-    void Viewport::flash(Plus::Color* color, unsigned int duration) {
-        // TODO
+    void Viewport::flash(const Plus::Color* color, unsigned int duration) {
+        this->flashControl->start(color, duration);
     }
 
     /*
@@ -168,7 +285,7 @@ namespace Plus {
      * method if no flash effect is needed.
      */
     void Viewport::update() {
-        // TODO
+        this->flashControl->update();
     }
 
     /*
@@ -325,12 +442,24 @@ namespace Plus {
     }
 
     /*
+     * Checks if buffer should be recreated
+     *
+     * @return bool
+     */
+    bool Viewport::shouldResizeBuffer() {
+        int currentWidth = this->rect->getWidth();
+        int currentHeight = this->rect->getHeight();
+
+        return ((currentWidth != this->bufferWidth) || (currentHeight != this->bufferHeight));
+    }
+
+    /*
      * Draw drawables associated with this viewport into framebuffer
      */
     void Viewport::drawInnerObjects() {
         glBindFramebuffer(GL_FRAMEBUFFER, this->framebuffer);
+        //glClearColor(1, 1, 1, 1);
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-
         for (Drawable* obj : *this->objects) {
             obj->draw();
             glLoadIdentity();
@@ -341,14 +470,18 @@ namespace Plus {
      * Draws viewport and registered drawables
      */
     void Viewport::draw() {
-        if (!this->visible || this->_disposed) {
+        float width = (float)this->rect->getWidth();
+        float height = (float)this->rect->getHeight();
+
+        if (!this->visible || this->_disposed || (width <= 0) || (height <= 0)) {
             return;
         }
 
-        this->drawInnerObjects();
+        if (this->shouldResizeBuffer()) {
+            this->createFboAttachments();
+        }
 
-        float width = (float)this->rect->getWidth();
-        float height = (float)this->rect->getHeight();
+        this->drawInnerObjects();
 
         float vertices[] = {
             0, 0,
@@ -364,23 +497,37 @@ namespace Plus {
             0, 1
         };
 
-        glUseProgram(0);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glBindTexture(GL_TEXTURE_2D, this->textureId);
         glEnableClientState(GL_VERTEX_ARRAY);
         glEnableClientState(GL_TEXTURE_COORD_ARRAY_EXT);
+        Viewport::ShaderData* data = Viewport::getShaderData();
+        glUseProgram(data->program);
+        glUniform4fv(data->toneLoc, 1, this->tone->dump());
+
+        Plus::Color flashColor = this->flashControl->getColor();
+
+        if (this->flashControl->isFlashing() && flashColor.getAlpha() > this->color->getAlpha()) {
+            glUniform4fv(data->colorLoc, 1, flashColor.dump());
+        } else {
+            glUniform4fv(data->colorLoc, 1, this->color->dump());
+        }
+
+        glTranslatef(this->rect->getX(), Plus::Graphics.getHeight() - this->rect->getY() - height, this->z);
+        glTranslatef(-this->ox, -this->oy, 0);
         glVertexPointer(2, GL_FLOAT, 0, vertices);
         glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
         glDrawArrays(GL_QUADS, 0, 4);
         glDisableClientState(GL_TEXTURE_COORD_ARRAY_EXT);
         glDisableClientState(GL_VERTEX_ARRAY);
+        glUseProgram(0);
     }
 
     /*
      * Destructor
      */
     Viewport::~Viewport(){
-
+        Plus::Graphics.removeObject(this);
     }
 };
 

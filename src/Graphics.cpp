@@ -50,7 +50,7 @@ namespace Plus {
 
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        gluOrtho2D(0, width, 0, height);
+        glOrtho(0, width, 0, height, -9999, 9999);
 
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();

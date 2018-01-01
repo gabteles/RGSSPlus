@@ -319,7 +319,11 @@ namespace Plus {
     /*
      * Destructor
      */
-    Drawable::~Drawable(){
-        this->viewport->removeObject(this);
+    Drawable::~Drawable() {
+        if (this->viewport) {
+            this->viewport->removeObject(this);
+        } else {
+            Plus::Viewport::getDefault()->removeObject(this);
+        }
     }
 }
